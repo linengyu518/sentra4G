@@ -1,0 +1,1227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SENTRA · Discreet 4G Camera</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=Hanken+Grotesk:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0E1A1F; --bg2:#0B161B; --surface:#16292F; --surface2:#1C343B;
+  --line:#213B43; --line2:#2C4C55;
+  --paper:#EAEEEC; --ink:#0C1519;
+  --amber:#F2A33C; --amber-dim:rgba(242,163,60,.14);
+  --cyan:#43D6C0; --cyan-dim:rgba(67,214,192,.12);
+  --red:#E5604D;
+  --text:#DCE6E4; --muted:#859CA1; --muted2:#566E74;
+  --mono:'JetBrains Mono',monospace;
+  --disp:'Archivo','Noto Sans SC',sans-serif;
+  --body:'Hanken Grotesk','Noto Sans SC',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg); color:var(--text); font-family:var(--body); font-weight:300; line-height:1.6; -webkit-font-smoothing:antialiased; overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+img,svg{display:block;max-width:100%}
+.mono{font-family:var(--mono)}
+.eyebrow{font-family:var(--mono); font-size:11px; letter-spacing:.22em; text-transform:uppercase; color:var(--amber); font-weight:500}
+.wrap{max-width:1180px; margin:0 auto; padding:0 32px}
+.nav{position:sticky; top:0; z-index:50; background:rgba(11,22,27,.82); backdrop-filter:blur(14px); border-bottom:1px solid var(--line)}
+.nav-inner{max-width:1180px; margin:0 auto; padding:0 32px; height:64px; display:flex; align-items:center; justify-content:space-between; gap:18px}
+.brand{display:flex; align-items:center; gap:11px; font-family:var(--disp); font-weight:800; font-size:19px; letter-spacing:.02em}
+.brand .glyph{width:26px; height:26px; border-radius:50%; border:2px solid var(--amber); position:relative; flex-shrink:0}
+.brand .glyph::before{content:''; position:absolute; inset:5px; border-radius:50%; background:var(--amber)}
+.brand .glyph::after{content:''; position:absolute; top:3px; right:3px; width:4px; height:4px; border-radius:50%; background:var(--bg)}
+.brand small{font-family:var(--mono); font-weight:400; font-size:10px; letter-spacing:.18em; color:var(--muted); text-transform:uppercase; margin-left:2px}
+.nav-right{display:flex; align-items:center; gap:14px}
+.navlinks{display:flex; align-items:center; gap:4px}
+.navlinks button{font-family:var(--mono); font-size:12px; letter-spacing:.05em; text-transform:uppercase; color:var(--muted); padding:8px 13px; border-radius:6px; transition:.18s}
+.navlinks button:hover{color:var(--text)}
+.navlinks button.active{color:var(--bg); background:var(--amber)}
+.lang-toggle{font-family:var(--mono); font-size:12px; color:var(--muted); border:1px solid var(--line2); padding:7px 11px; border-radius:6px; transition:.18s; white-space:nowrap}
+.lang-toggle:hover{border-color:var(--amber); color:var(--amber)}
+.nav-cta{font-family:var(--mono); font-size:12px; letter-spacing:.05em; text-transform:uppercase; color:var(--text); padding:8px 14px; border:1px solid var(--line2); border-radius:6px; transition:.18s; white-space:nowrap}
+.nav-cta:hover{border-color:var(--amber); color:var(--amber)}
+.menu-btn{display:none; font-family:var(--mono); font-size:12px; color:var(--text); border:1px solid var(--line2); padding:7px 12px; border-radius:6px}
+.page{display:none; animation:fade .4s ease}
+.page.active{display:block}
+@keyframes fade{from{opacity:0; transform:translateY(6px)}to{opacity:1; transform:none}}
+.hero{position:relative; overflow:hidden; padding:96px 0 80px; border-bottom:1px solid var(--line)}
+.contour{position:absolute; inset:0; z-index:0; opacity:.5; pointer-events:none}
+.contour svg{width:100%; height:100%}
+.hero .wrap{position:relative; z-index:2}
+.hero-grid{display:grid; grid-template-columns:1.15fr .85fr; gap:56px; align-items:center}
+.hero h1{font-family:var(--disp); font-weight:900; font-size:clamp(40px,6vw,76px); line-height:.96; letter-spacing:-.02em; color:#fff; margin:18px 0 0}
+.hero h1 .l{display:block}
+.hero h1 .amber{color:var(--amber)}
+.hero p.lead{font-size:18px; color:var(--muted); max-width:30em; margin:24px 0 0; font-weight:300}
+.hero-actions{display:flex; gap:14px; margin-top:36px; flex-wrap:wrap}
+.btn{font-family:var(--mono); font-size:13px; letter-spacing:.04em; text-transform:uppercase; padding:14px 24px; border-radius:7px; transition:.18s; display:inline-flex; align-items:center; gap:8px}
+.btn-primary{background:var(--amber); color:var(--bg); font-weight:700}
+.btn-primary:hover{transform:translateY(-2px); box-shadow:0 10px 28px -10px var(--amber)}
+.btn-ghost{border:1px solid var(--line2); color:var(--text)}
+.btn-ghost:hover{border-color:var(--amber); color:var(--amber)}
+.triad{display:flex; gap:0; margin-top:48px; border-top:1px solid var(--line)}
+.triad div{flex:1; padding:18px 0 0}
+.triad .k{font-family:var(--disp); font-weight:800; font-size:15px; letter-spacing:.04em; color:#fff}
+.triad .v{font-family:var(--mono); font-size:11px; letter-spacing:.04em; color:var(--muted); margin-top:4px}
+.console{background:linear-gradient(160deg,var(--surface),var(--bg2)); border:1px solid var(--line2); border-radius:14px; padding:22px; position:relative; box-shadow:0 30px 60px -30px #000}
+.console::before{content:'LIVE'; position:absolute; top:16px; right:18px; font-family:var(--mono); font-size:10px; letter-spacing:.18em; color:var(--cyan)}
+.console .dot{position:absolute; top:18px; right:54px; width:7px; height:7px; border-radius:50%; background:var(--cyan); animation:ping 2.4s infinite}
+@keyframes ping{0%{box-shadow:0 0 0 0 rgba(67,214,192,.5)}70%{box-shadow:0 0 0 9px rgba(67,214,192,0)}100%{box-shadow:0 0 0 0 rgba(67,214,192,0)}}
+.console .lens{width:64px; height:64px; border-radius:50%; border:3px solid var(--line2); display:flex; align-items:center; justify-content:center; margin-bottom:18px}
+.console .lens b{width:30px; height:30px; border-radius:50%; background:radial-gradient(circle at 35% 30%, #2a4c54, #0a1316)}
+.console .lbl{font-family:var(--mono); font-size:10px; letter-spacing:.16em; color:var(--muted2); text-transform:uppercase}
+.console .model{font-family:var(--disp); font-weight:800; font-size:22px; color:#fff; margin-top:2px}
+.readout{margin-top:20px; border-top:1px dashed var(--line2); padding-top:16px; display:grid; grid-template-columns:1fr 1fr; gap:14px 18px}
+.readout .r .rk{font-family:var(--mono); font-size:9.5px; letter-spacing:.14em; color:var(--muted2); text-transform:uppercase}
+.readout .r .rv{font-family:var(--mono); font-size:14px; color:var(--text); margin-top:3px; font-weight:500}
+.readout .r .rv .on{color:var(--cyan)}
+.bars{display:inline-flex; gap:2px; align-items:flex-end; height:13px; vertical-align:middle}
+.bars i{width:3px; background:var(--muted2); border-radius:1px}
+.bars i.f{background:var(--cyan)}
+.bars i:nth-child(1){height:4px}.bars i:nth-child(2){height:7px}.bars i:nth-child(3){height:10px}.bars i:nth-child(4){height:13px}
+.tx{margin-top:18px; background:var(--bg2); border:1px solid var(--line); border-radius:8px; padding:11px 14px; font-family:var(--mono); font-size:11px; color:var(--muted); display:flex; align-items:center; gap:10px; overflow:hidden}
+.tx .pip{width:6px; height:6px; border-radius:50%; background:var(--amber); flex-shrink:0; animation:travel 3s infinite ease-in-out}
+@keyframes travel{0%{transform:translateX(0)}50%{transform:translateX(4px)}100%{transform:translateX(0)}}
+.section{padding:84px 0}
+.section.paper{background:var(--paper); color:var(--ink)}
+.section.paper .eyebrow{color:#b9742a}
+.sec-head{max-width:40em}
+.sec-head h2{font-family:var(--disp); font-weight:800; font-size:clamp(28px,4vw,44px); letter-spacing:-.015em; line-height:1.05; margin:14px 0 0}
+.sec-head p{font-size:17px; color:var(--muted); margin-top:16px; font-weight:300}
+.section.paper .sec-head p{color:#54656a}
+.steps{display:grid; grid-template-columns:repeat(3,1fr); gap:2px; margin-top:48px; border:1px solid var(--line); border-radius:12px; overflow:hidden}
+.section.paper .steps{border-color:#cfd6d2}
+.step{background:var(--surface); padding:30px 26px; position:relative}
+.section.paper .step{background:#f4f6f4}
+.step .n{font-family:var(--mono); font-size:11px; letter-spacing:.12em; color:var(--amber)}
+.step h3{font-family:var(--disp); font-weight:700; font-size:19px; margin:14px 0 8px; color:#fff}
+.section.paper .step h3{color:var(--ink)}
+.step p{font-size:14.5px; color:var(--muted)}
+.section.paper .step p{color:#5d6e72}
+.step .ar{position:absolute; top:50%; right:-13px; z-index:3; color:var(--amber); font-family:var(--mono); font-size:18px; transform:translateY(-50%)}
+.step:last-child .ar{display:none}
+.fgrid{display:grid; grid-template-columns:repeat(3,1fr); gap:18px; margin-top:48px}
+.fcard{background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:26px 24px; transition:.2s}
+.fcard:hover{border-color:var(--line2); transform:translateY(-3px)}
+.section.paper .fcard{background:#f4f6f4; border-color:#d4dad6}
+.fcard .ic{width:38px; height:38px; border-radius:9px; background:var(--amber-dim); display:flex; align-items:center; justify-content:center; margin-bottom:16px; color:var(--amber); font-size:18px}
+.fcard h3{font-family:var(--disp); font-weight:700; font-size:17px; color:#fff; margin-bottom:7px}
+.section.paper .fcard h3{color:var(--ink)}
+.fcard p{font-size:14px; color:var(--muted)}
+.section.paper .fcard p{color:#5d6e72}
+.specstrip{display:grid; grid-template-columns:repeat(4,1fr); gap:0; margin-top:52px; border:1px solid var(--line); border-radius:12px; overflow:hidden}
+.specstrip .sp{padding:26px 22px; border-right:1px solid var(--line)}
+.specstrip .sp:last-child{border-right:none}
+.specstrip .v{font-family:var(--disp); font-weight:800; font-size:30px; color:var(--amber); letter-spacing:-.01em}
+.specstrip .k{font-family:var(--mono); font-size:11px; letter-spacing:.08em; color:var(--muted); text-transform:uppercase; margin-top:6px}
+.ctaband{background:var(--amber); color:var(--bg); border-radius:16px; padding:50px 44px; display:flex; align-items:center; justify-content:space-between; gap:30px; flex-wrap:wrap}
+.ctaband h2{font-family:var(--disp); font-weight:900; font-size:clamp(26px,3.4vw,38px); letter-spacing:-.015em; line-height:1.02}
+.ctaband p{font-size:15px; color:#5a3d12; margin-top:8px; font-weight:400}
+.ctaband .btn-dark{background:var(--bg); color:var(--amber); font-weight:700; white-space:nowrap}
+.ctaband .btn-dark:hover{transform:translateY(-2px)}
+.prodhero{padding:72px 0 0}
+.prodtop{display:grid; grid-template-columns:1fr 1fr; gap:48px; align-items:center}
+.prodshot{background:linear-gradient(155deg,var(--surface2),var(--bg2)); border:1px solid var(--line2); border-radius:16px; aspect-ratio:1/1; display:flex; align-items:center; justify-content:center; position:relative}
+.prodshot .pbody{width:38%; aspect-ratio:3/4; background:linear-gradient(145deg,#21363d,#13242a); border:1px solid var(--line2); border-radius:16px; position:relative; box-shadow:0 24px 50px -24px #000}
+.prodshot .pbody .biglens{position:absolute; top:18%; left:50%; transform:translateX(-50%); width:50%; aspect-ratio:1; border-radius:50%; border:3px solid var(--line2); background:radial-gradient(circle at 36% 30%,#36606b,#091115)}
+.prodshot .pbody .mic{position:absolute; bottom:14%; left:50%; transform:translateX(-50%); width:36%; height:7%; background:repeating-linear-gradient(90deg,#0d1a1f,#0d1a1f 2px,#2c4c55 2px,#2c4c55 4px); border-radius:3px; opacity:.85}
+.prodshot .tag{position:absolute; top:20px; left:20px; font-family:var(--mono); font-size:10px; letter-spacing:.16em; color:var(--cyan); border:1px solid var(--line2); padding:5px 10px; border-radius:20px}
+.prod-meta h1{font-family:var(--disp); font-weight:900; font-size:clamp(34px,5vw,56px); color:#fff; letter-spacing:-.02em; line-height:1; margin:14px 0 0}
+.prod-meta .sub{font-size:17px; color:var(--muted); margin-top:18px; max-width:30em}
+.chips{display:flex; flex-wrap:wrap; gap:9px; margin-top:24px}
+.chip{font-family:var(--mono); font-size:11px; letter-spacing:.04em; color:var(--text); border:1px solid var(--line2); padding:7px 12px; border-radius:20px}
+.chip b{color:var(--amber); font-weight:500}
+.spectable{margin-top:24px; border:1px solid var(--line); border-radius:12px; overflow:hidden}
+.spectable .row{display:grid; grid-template-columns:200px 1fr; border-bottom:1px solid var(--line)}
+.spectable .row:last-child{border-bottom:none}
+.spectable .row:nth-child(odd){background:var(--surface)}
+.spectable .c1{padding:15px 22px; font-family:var(--mono); font-size:11.5px; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); border-right:1px solid var(--line)}
+.spectable .c2{padding:15px 22px; font-size:15px; color:var(--text)}
+.spectable .c2 b{color:var(--amber); font-weight:500}
+.contact-grid{display:grid; grid-template-columns:1fr 1fr; gap:56px; margin-top:48px}
+.field{margin-bottom:18px}
+.field label{display:block; font-family:var(--mono); font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); margin-bottom:8px}
+.field input,.field textarea,.field select{width:100%; background:var(--surface); border:1px solid var(--line2); border-radius:8px; padding:13px 15px; color:var(--text); font-family:var(--body); font-size:15px; transition:.16s}
+.field input:focus,.field textarea:focus,.field select:focus{outline:none; border-color:var(--amber)}
+.field textarea{resize:vertical; min-height:120px}
+.cinfo{display:flex; flex-direction:column; gap:24px}
+.cinfo .blk .ck{font-family:var(--mono); font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--amber); margin-bottom:7px}
+.cinfo .blk .cv{font-size:16px; color:var(--text)}
+.cinfo .blk .cv span{color:var(--muted); display:block; font-size:14px; margin-top:2px}
+.form-note{font-family:var(--mono); font-size:12px; color:var(--cyan); margin-top:6px; min-height:18px}
+.buygrid{display:grid; grid-template-columns:1fr 1fr; gap:22px; margin-top:48px}
+.storecard{background:var(--surface); border:1px solid var(--line); border-radius:16px; padding:40px 34px; display:flex; flex-direction:column; gap:14px; transition:.2s}
+.storecard:hover{border-color:var(--line2); transform:translateY(-3px)}
+.storecard .slogo{font-family:var(--disp); font-weight:900; font-size:28px; letter-spacing:-.01em}
+.storecard .slogo.ali{color:#ff5a2c}
+.storecard .slogo.amz{color:#ff9b1a}
+.storecard .stag{font-family:var(--mono); font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted2)}
+.storecard p{font-size:15px; color:var(--muted); flex:1; line-height:1.7}
+.storecard .sbtn{align-self:flex-start; background:var(--amber); color:var(--bg); font-family:var(--mono); font-size:13px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; padding:13px 24px; border-radius:8px; transition:.16s; display:inline-flex; align-items:center; gap:8px}
+.storecard .sbtn:hover{transform:translateY(-2px); box-shadow:0 10px 28px -10px var(--amber)}
+.buy-note{font-family:var(--mono); font-size:12px; color:var(--muted2); margin-top:24px}
+.album-notice{font-family:var(--mono); font-size:11.5px; color:var(--cyan); background:var(--cyan-dim); border:1px solid rgba(67,214,192,.25); border-radius:8px; padding:11px 14px; margin-bottom:16px; line-height:1.7}
+.authwrap{min-height:calc(100vh - 64px); display:flex; align-items:flex-start; justify-content:center; padding:54px 20px}
+.authbox{width:100%; max-width:920px}
+.auth-banner{background:#cfe2ea; color:#1c3a44; border-radius:10px; padding:15px 18px; margin-bottom:26px; display:flex; align-items:center; justify-content:space-between; gap:14px; font-size:14px; font-weight:500}
+.auth-banner button{color:#4a6670; font-size:18px; line-height:1}
+.authhead{display:flex; flex-direction:column; align-items:center; margin-bottom:30px; text-align:center}
+.authhead .brand{font-size:26px; margin-bottom:4px}
+.authview{display:none}
+.authview.on{display:block; animation:fade .3s ease}
+.acols{display:grid; grid-template-columns:1fr 1px 1fr; gap:0 44px}
+.acols .vsep{background:var(--line); width:1px}
+.acol h2{font-family:var(--disp); font-weight:700; font-size:24px; color:var(--cyan); letter-spacing:-.01em; margin-bottom:18px}
+.acol p.muted{font-size:14.5px; color:var(--muted); margin-bottom:18px; line-height:1.7}
+.auth-label{display:block; font-family:var(--body); font-size:14px; color:var(--cyan); font-weight:500; margin:0 0 8px}
+.auth-input{width:100%; background:#fff; border:1px solid var(--line2); border-radius:6px; padding:13px 14px; color:#10242a; font-family:var(--body); font-size:15px; margin-bottom:18px}
+.auth-input:focus{outline:2px solid var(--amber); outline-offset:0; border-color:var(--amber)}
+.auth-row{display:flex; align-items:center; gap:12px; flex-wrap:wrap}
+.auth-select{background:#fff; border:1px solid var(--line2); border-radius:6px; padding:13px 14px; color:#10242a; font-family:var(--body); font-size:15px}
+.auth-btn{background:var(--cyan); color:#06231f; font-weight:700; font-family:var(--body); font-size:15px; padding:13px 26px; border-radius:6px; transition:.16s}
+.auth-btn:hover{filter:brightness(1.06)}
+.auth-btn.block{width:100%; display:block; text-align:center}
+.auth-btn.amber{background:var(--amber); color:var(--bg)}
+.auth-link{color:var(--cyan); font-size:14px; font-weight:500}
+.auth-link:hover{text-decoration:underline}
+.auth-foot{margin-top:16px; text-align:right}
+.auth-note{font-family:var(--mono); font-size:12px; min-height:18px; margin-top:8px}
+.auth-note.err{color:var(--red)} .auth-note.ok{color:var(--cyan)}
+.reg-grid{display:grid; grid-template-columns:1fr 1fr; gap:0 44px; margin-top:8px}
+.reg-help{font-size:14px; color:var(--muted); line-height:1.7; margin-top:6px}
+.demo-bar{background:var(--surface); border:1px solid var(--line2); border-radius:12px; padding:18px 22px; margin-top:34px; display:flex; align-items:center; gap:20px; flex-wrap:wrap}
+.demo-bar .auth-btn{white-space:nowrap}
+.demo-bar p{font-size:14px; color:var(--muted)}
+.authhr{border:none; border-top:1px solid var(--line); margin:14px 0 26px}
+.backrow{margin-top:24px}
+.admin{display:grid; grid-template-columns:230px 1fr; min-height:calc(100vh - 64px)}
+.aside{border-right:1px solid var(--line); padding:28px 18px; background:var(--bg2); display:flex; flex-direction:column}
+.aside .ah{font-family:var(--mono); font-size:10px; letter-spacing:.16em; text-transform:uppercase; color:var(--muted2); padding:0 12px; margin:22px 0 8px}
+.aside .ah:first-child{margin-top:0}
+.amenu{display:flex; flex-direction:column; gap:2px}
+.amenu button{display:flex; align-items:center; gap:11px; padding:10px 12px; border-radius:8px; font-size:14px; color:var(--muted); text-align:left; transition:.15s; white-space:nowrap}
+.amenu button:hover{background:var(--surface); color:var(--text)}
+.amenu button.on{background:var(--amber-dim); color:var(--amber); font-weight:500}
+.amenu button .mi{font-size:15px; width:18px; text-align:center}
+.aside .signout{margin-top:auto}
+.aside .signout button{color:var(--muted2)}
+.aside .signout button:hover{color:var(--red); background:var(--surface)}
+.acontent{padding:34px 38px; min-width:0}
+.atitle{font-family:var(--disp); font-weight:800; font-size:26px; color:#fff; letter-spacing:-.01em}
+.asub{font-size:14.5px; color:var(--muted); margin-top:6px}
+.apanel{display:none}
+.apanel.on{display:block; animation:fade .3s ease}
+.dev-layout{display:grid; grid-template-columns:340px 1fr; gap:26px; margin-top:30px; align-items:start}
+.dlist{display:flex; flex-direction:column; gap:10px}
+.dcard{background:var(--surface); border:1px solid var(--line); border-radius:11px; padding:16px; cursor:pointer; transition:.16s; position:relative}
+.dcard:hover{border-color:var(--line2)}
+.dcard.sel{border-color:var(--amber); background:var(--surface2)}
+.dcard .top{display:flex; align-items:center; justify-content:space-between; gap:10px}
+.dcard .dn{font-family:var(--disp); font-weight:700; font-size:16px; color:#fff}
+.dcard .sn{font-family:var(--mono); font-size:11px; color:var(--muted); margin-top:3px}
+.status{font-family:var(--mono); font-size:10px; letter-spacing:.08em; text-transform:uppercase; display:inline-flex; align-items:center; gap:6px; padding:4px 9px; border-radius:20px}
+.status.online{color:var(--cyan); background:var(--cyan-dim)}
+.status.offline{color:var(--muted); background:var(--surface2)}
+.status .sd{width:6px; height:6px; border-radius:50%; background:currentColor}
+.dcard .meta{display:flex; gap:16px; margin-top:13px; font-family:var(--mono); font-size:11px; color:var(--muted)}
+.dcard .meta b{color:var(--text); font-weight:500}
+.addbtn{background:var(--surface); border:1px dashed var(--line2); border-radius:11px; padding:14px; font-family:var(--mono); font-size:12px; letter-spacing:.05em; text-transform:uppercase; color:var(--muted); transition:.16s}
+.addbtn:hover{border-color:var(--amber); color:var(--amber)}
+.addform{display:none; background:var(--surface); border:1px solid var(--line2); border-radius:11px; padding:18px; margin-top:10px}
+.addform.on{display:block; animation:fade .25s ease}
+.addform .ff{display:flex; flex-direction:column; gap:12px; margin-bottom:12px}
+.addform .ff label{font-family:var(--mono); font-size:10px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); margin-bottom:-6px}
+.addform input{width:100%; background:var(--bg2); border:1px solid var(--line2); border-radius:8px; padding:11px 13px; color:var(--text); font-family:var(--body); font-size:14px}
+.addform input:focus{outline:none; border-color:var(--amber)}
+.addform .fa{display:flex; gap:10px}
+.addform .fa button.go{background:var(--amber); color:var(--bg); font-family:var(--mono); font-size:12px; font-weight:700; text-transform:uppercase; padding:11px 20px; border-radius:8px}
+.addform .fa button.cx{border:1px solid var(--line2); font-family:var(--mono); font-size:12px; text-transform:uppercase; color:var(--muted); padding:11px 18px; border-radius:8px}
+.ddetail{background:var(--surface); border:1px solid var(--line); border-radius:13px; padding:28px; min-width:0}
+.dd-head{display:flex; align-items:flex-start; justify-content:space-between; gap:16px; border-bottom:1px solid var(--line); padding-bottom:20px; margin-bottom:22px; flex-wrap:wrap}
+.dd-head .dn-row{display:flex; align-items:center; gap:10px}
+.dd-head .dn{font-family:var(--disp); font-weight:800; font-size:22px; color:#fff}
+.dd-head .sn{font-family:var(--mono); font-size:12px; color:var(--muted); margin-top:4px}
+.iconbtn{width:30px; height:30px; border-radius:7px; border:1px solid var(--line2); color:var(--muted); font-size:14px; display:inline-flex; align-items:center; justify-content:center; transition:.15s}
+.iconbtn:hover{border-color:var(--amber); color:var(--amber)}
+.iconbtn.danger:hover{border-color:var(--red); color:var(--red)}
+.dd-actions{display:flex; gap:8px}
+.rename{display:flex; gap:8px; align-items:center; flex-wrap:wrap}
+.rename input{background:var(--bg2); border:1px solid var(--amber); border-radius:7px; padding:8px 11px; color:#fff; font-family:var(--disp); font-weight:700; font-size:18px; width:200px; max-width:60vw}
+.rename input:focus{outline:none}
+.rename .rb{font-family:var(--mono); font-size:11px; text-transform:uppercase; padding:8px 12px; border-radius:7px}
+.rename .save{background:var(--amber); color:var(--bg); font-weight:700}
+.rename .cancel{border:1px solid var(--line2); color:var(--muted)}
+.confirmbar{background:rgba(229,96,77,.1); border:1px solid var(--red); border-radius:9px; padding:13px 16px; margin-bottom:18px; display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap}
+.confirmbar .ct{font-size:14px; color:var(--text)}
+.confirmbar .cb{display:flex; gap:8px}
+.confirmbar .cb button{font-family:var(--mono); font-size:11px; text-transform:uppercase; padding:8px 14px; border-radius:7px}
+.confirmbar .cb .yes{background:var(--red); color:#fff; font-weight:700}
+.confirmbar .cb .no{border:1px solid var(--line2); color:var(--muted)}
+.ddstats{display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:26px}
+.ddstats .s{background:var(--bg2); border:1px solid var(--line); border-radius:9px; padding:14px}
+.ddstats .s .k{font-family:var(--mono); font-size:9.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted2)}
+.ddstats .s .v{font-family:var(--mono); font-size:17px; color:var(--text); margin-top:5px; font-weight:500}
+.ddstats .s .v.cy{color:var(--cyan)}
+.blockhd{display:flex; align-items:center; justify-content:space-between; margin:0 0 14px; gap:10px; flex-wrap:wrap}
+.blockhd .t{font-family:var(--disp); font-weight:700; font-size:16px; color:#fff}
+.blockhd .c{font-family:var(--mono); font-size:11px; color:var(--muted)}
+.secdiv{border-top:1px solid var(--line); margin:26px 0}
+.phfilter{display:flex; gap:7px; flex-wrap:wrap}
+.phfilter button{font-family:var(--mono); font-size:10.5px; letter-spacing:.04em; text-transform:uppercase; color:var(--muted); border:1px solid var(--line2); padding:6px 11px; border-radius:20px; transition:.15s}
+.phfilter button:hover{color:var(--text)}
+.phfilter button.on{background:var(--amber); color:var(--bg); border-color:var(--amber); font-weight:700}
+.reclist{display:flex; flex-direction:column; gap:8px; margin-bottom:18px}
+.recitem{display:flex; align-items:center; justify-content:space-between; gap:12px; background:var(--bg2); border:1px solid var(--line); border-radius:8px; padding:11px 14px}
+.recitem .em{font-size:14.5px; color:var(--text); display:flex; align-items:center; gap:2px; word-break:break-all}
+.recitem .em .at{color:var(--amber); font-family:var(--mono)}
+.recitem button{color:var(--muted2); font-size:16px; line-height:1; padding:4px 8px; border-radius:5px; transition:.15s; flex-shrink:0}
+.recitem button:hover{color:var(--red)}
+.recempty{font-family:var(--mono); font-size:12.5px; color:var(--muted2); background:var(--bg2); border:1px dashed var(--line2); border-radius:8px; padding:18px; text-align:center; margin-bottom:18px}
+.recfull{font-family:var(--mono); font-size:12px; color:var(--muted); background:var(--bg2); border:1px solid var(--line); border-radius:8px; padding:13px 16px}
+.recadd{display:flex; gap:10px}
+.recadd input{flex:1; min-width:0; background:var(--bg2); border:1px solid var(--line2); border-radius:8px; padding:12px 14px; color:var(--text); font-family:var(--body); font-size:14.5px}
+.recadd input:focus{outline:none; border-color:var(--amber)}
+.recadd button{background:var(--amber); color:var(--bg); font-family:var(--mono); font-size:12px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; padding:0 20px; border-radius:8px; white-space:nowrap}
+.recadd button:hover{filter:brightness(1.06)}
+.recerr{font-family:var(--mono); font-size:11.5px; color:var(--red); margin-top:8px; min-height:16px}
+.phgrid{display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:12px}
+.phcard{border:1px solid var(--line); border-radius:10px; overflow:hidden; cursor:pointer; background:var(--bg2); transition:.16s; position:relative}
+.phcard:hover{border-color:var(--amber); transform:translateY(-2px)}
+.phimg{position:relative; aspect-ratio:4/3; overflow:hidden}
+.phimg svg{width:100%; height:100%}
+.phimg .ts{position:absolute; left:7px; bottom:6px; font-family:var(--mono); font-size:9.5px; color:#cfe8da; background:rgba(8,16,13,.6); padding:2px 6px; border-radius:4px}
+.phimg .trg{position:absolute; right:7px; bottom:6px; font-family:var(--mono); font-size:8.5px; letter-spacing:.06em; text-transform:uppercase; color:var(--amber); background:rgba(8,16,13,.6); padding:2px 6px; border-radius:4px}
+.phdel{position:absolute; right:6px; top:6px; width:24px; height:24px; border-radius:6px; background:rgba(8,16,13,.66); color:#e9c7bf; font-size:14px; line-height:1; display:flex; align-items:center; justify-content:center; transition:.15s; z-index:3}
+.phdel:hover{background:var(--red); color:#fff}
+.phempty{font-family:var(--mono); font-size:12.5px; color:var(--muted2); background:var(--bg2); border:1px dashed var(--line2); border-radius:8px; padding:22px; text-align:center}
+.lightbox{position:fixed; inset:0; z-index:100; background:rgba(6,12,10,.86); backdrop-filter:blur(4px); display:none; align-items:center; justify-content:center; padding:24px}
+.lightbox.on{display:flex; animation:fade .2s ease}
+.lbinner{max-width:680px; width:100%; background:var(--surface); border:1px solid var(--line2); border-radius:14px; overflow:hidden}
+.lbimg{aspect-ratio:4/3; position:relative}
+.lbimg svg{width:100%; height:100%}
+.lbbar{display:flex; align-items:center; justify-content:space-between; gap:14px; padding:16px 20px; flex-wrap:wrap}
+.lbbar .li{font-family:var(--mono); font-size:12px; color:var(--text)}
+.lbbar .li span{color:var(--muted); margin-right:14px}
+.lbbar .lacts{display:flex; gap:8px}
+.lbbar .lc{font-family:var(--mono); font-size:11px; text-transform:uppercase; color:var(--muted); border:1px solid var(--line2); padding:8px 14px; border-radius:7px}
+.lbbar .lc:hover{border-color:var(--amber); color:var(--amber)}
+.lbbar .lc.del:hover{border-color:var(--red); color:var(--red)}
+.gtable{border:1px solid var(--line); border-radius:11px; overflow:hidden; margin-top:26px}
+.gtable .gr{display:grid; grid-template-columns:1.4fr 1fr 90px; border-bottom:1px solid var(--line)}
+.gtable .gr:last-child{border-bottom:none}
+.gtable .gr.h{background:var(--surface2)}
+.gtable .gr.h .gc{font-family:var(--mono); font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted)}
+.gtable .gc{padding:14px 18px; font-size:14px; color:var(--text); display:flex; align-items:center; word-break:break-all}
+.gtable .gr:not(.h):nth-child(even){background:var(--surface)}
+.setcard{background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:26px; max-width:520px; margin-top:26px}
+.setcard h3{font-family:var(--disp); font-weight:700; font-size:18px; color:#fff; margin-bottom:6px}
+.setcard p.sd{font-size:14px; color:var(--muted); margin-bottom:20px}
+.setcard label{display:block; font-family:var(--mono); font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); margin:0 0 8px}
+.setcard input{width:100%; background:var(--bg2); border:1px solid var(--line2); border-radius:8px; padding:12px 14px; color:var(--text); font-family:var(--body); font-size:15px; margin-bottom:16px}
+.setcard input:focus{outline:none; border-color:var(--amber)}
+.setcard .pwbtn{background:var(--amber); color:var(--bg); font-family:var(--mono); font-size:12px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; padding:13px 22px; border-radius:8px}
+.setcard .pwnote{font-family:var(--mono); font-size:12px; min-height:18px; margin-top:10px}
+.setcard .pwnote.err{color:var(--red)} .setcard .pwnote.ok{color:var(--cyan)}
+.foot{border-top:1px solid var(--line); padding:46px 0 40px}
+.foot-inner{display:flex; justify-content:space-between; align-items:flex-start; gap:30px; flex-wrap:wrap}
+.foot .fb{font-family:var(--mono); font-size:11.5px; color:var(--muted2); line-height:1.9}
+.foot .fl{display:flex; gap:28px; flex-wrap:wrap}
+.foot .fl button{font-family:var(--mono); font-size:12px; color:var(--muted); text-transform:uppercase; letter-spacing:.05em}
+.foot .fl button:hover{color:var(--amber)}
+@media(max-width:920px){
+  .hero-grid,.prodtop,.contact-grid,.buygrid{grid-template-columns:1fr; gap:40px}
+  .buygrid{gap:18px}
+  .steps,.fgrid,.specstrip{grid-template-columns:1fr}
+  .specstrip .sp{border-right:none; border-bottom:1px solid var(--line)}
+  .specstrip .sp:last-child{border-bottom:none}
+  .step .ar{display:none}
+  .dev-layout{grid-template-columns:1fr}
+  .ddstats{grid-template-columns:repeat(2,1fr)}
+  .admin{grid-template-columns:1fr}
+  .aside{border-right:none; border-bottom:1px solid var(--line); display:flex; flex-direction:row; gap:14px; padding:14px 16px; overflow-x:auto; align-items:center}
+  .aside .ah{display:none}
+  .amenu{flex-direction:row; gap:6px}
+  .aside .signout{margin-top:0; margin-left:auto}
+  .acontent{padding:26px 20px}
+  .acols{grid-template-columns:1fr; gap:30px}
+  .acols .vsep{display:none}
+  .reg-grid{grid-template-columns:1fr; gap:0}
+}
+@media(max-width:680px){
+  .wrap,.nav-inner{padding:0 20px}
+  .navlinks{display:none}
+  .nav-cta{display:none}
+  .menu-btn{display:block}
+  .navlinks.open{display:flex; position:absolute; top:64px; left:0; right:0; flex-direction:column; background:var(--bg2); border-bottom:1px solid var(--line); padding:12px; gap:4px}
+  .navlinks.open button{width:100%; text-align:left}
+  .hero{padding:64px 0 56px}
+  .section{padding:60px 0}
+  .prodhero{padding:48px 0 0}
+  .triad{flex-direction:column; gap:0}
+  .triad div{padding:14px 0; border-top:1px solid var(--line)}
+  .ctaband{padding:32px 24px}
+  .spectable .row{grid-template-columns:1fr}
+  .spectable .c1{border-right:none; border-bottom:1px solid var(--line); padding-bottom:6px}
+  .spectable .c2{padding-top:8px}
+  .gtable .gr{grid-template-columns:1fr}
+  .gtable .gc{border-bottom:1px solid var(--line)}
+  .gtable .gr:last-child .gc:last-child{border-bottom:none}
+  .ddstats{grid-template-columns:repeat(2,1fr)}
+  .ddetail{padding:20px}
+  .phgrid{grid-template-columns:repeat(auto-fill,minmax(130px,1fr))}
+}
+@media(prefers-reduced-motion:reduce){*{animation:none!important; transition:none!important}}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="brand"><span class="glyph"></span>SENTRA<small>P5 · 4G</small></div>
+    <div class="nav-right">
+      <div class="navlinks" id="navlinks">
+        <button data-go="home" class="active" data-i18n="nav_home">Home</button>
+        <button data-go="product" data-i18n="nav_product">Product</button>
+        <button data-go="buy" data-i18n="nav_buy">Where to buy</button>
+        <button data-go="contact" data-i18n="nav_contact">Contact</button>
+        <button data-go="admin" data-i18n="nav_console">Console</button>
+      </div>
+      <button class="lang-toggle" id="langToggle">中文</button>
+      <button class="nav-cta" data-go="buy" data-i18n="nav_buy_cta">Buy now →</button>
+      <button class="menu-btn" id="menuBtn" data-i18n="nav_menu">Menu</button>
+    </div>
+  </div>
+</nav>
+
+<div class="page active" id="page-home">
+  <section class="hero">
+    <div class="contour">
+      <svg viewBox="0 0 1200 700" preserveAspectRatio="xMidYMid slice" fill="none">
+        <g stroke="#234048" stroke-width="1">
+          <path d="M-50 120 C 250 60, 500 200, 760 130 S 1150 90, 1260 160"/>
+          <path d="M-50 200 C 250 150, 520 290, 780 210 S 1150 170, 1260 250"/>
+          <path d="M-50 300 C 260 250, 540 400, 800 300 S 1150 270, 1260 360"/>
+          <path d="M-50 420 C 270 360, 560 520, 820 410 S 1150 380, 1260 480"/>
+          <path d="M-50 540 C 280 480, 580 640, 840 520 S 1150 500, 1260 600"/>
+        </g>
+        <g stroke="#2c5059" stroke-width="1" opacity="0.6">
+          <path d="M-50 160 C 250 110, 510 245, 770 170 S 1150 130, 1260 205"/>
+          <path d="M-50 360 C 265 305, 550 460, 810 355 S 1150 325, 1260 420"/>
+        </g>
+        <circle cx="820" cy="300" r="3" fill="#F2A33C"/>
+        <circle cx="820" cy="300" r="11" stroke="#F2A33C" stroke-width="1" opacity="0.5"/>
+      </svg>
+    </div>
+    <div class="wrap">
+      <div class="hero-grid">
+        <div>
+          <span class="eyebrow" data-i18n="hero_eyebrow">Discreet 4G camera · Hi-sensitivity mic · VoLTE</span>
+          <h1><span class="l" data-i18n="hero_l1">It watches.</span><span class="l amber" data-i18n="hero_l2">It listens.</span><span class="l" data-i18n="hero_l3">It answers.</span></h1>
+          <p class="lead" data-i18n="hero_lead">A pocket-sized 4G camera you carry with you — trigger a sharp 5-megapixel photo whenever you want, hear your surroundings through a high-sensitivity mic, and take a two-way call to check in.</p>
+          <div class="hero-actions">
+            <button class="btn btn-primary" data-go="product" data-i18n="hero_see">See the device</button>
+            <button class="btn btn-ghost" data-go="buy" data-i18n="hero_buy">Where to buy</button>
+          </div>
+          <div class="triad">
+            <div><div class="k" data-i18n="triad_see_k">SEE</div><div class="v" data-i18n="triad_see_v">5MP HD photo</div></div>
+            <div><div class="k" data-i18n="triad_hear_k">HEAR</div><div class="v" data-i18n="triad_hear_v">High-sensitivity mic</div></div>
+            <div><div class="k" data-i18n="triad_talk_k">TALK</div><div class="v" data-i18n="triad_talk_v">Two-way VoLTE voice</div></div>
+          </div>
+        </div>
+        <div class="console">
+          <span class="dot"></span>
+          <div class="lens"><b></b></div>
+          <div class="lbl" data-i18n="con_unit">Unit · Pocket Cam</div>
+          <div class="model">SENTRA P5-EU</div>
+          <div class="readout">
+            <div class="r"><div class="rk" data-i18n="con_status">Status</div><div class="rv"><span class="on" data-i18n="con_online">● Online</span></div></div>
+            <div class="r"><div class="rk" data-i18n="con_signal">Signal</div><div class="rv"><span class="bars"><i class="f"></i><i class="f"></i><i class="f"></i><i></i></span> 4G</div></div>
+            <div class="r"><div class="rk" data-i18n="con_battery">Battery</div><div class="rv">87%</div></div>
+            <div class="r"><div class="rk" data-i18n="con_lasttx">Last TX</div><div class="rv" data-i18n="con_ago">00:03 ago</div></div>
+          </div>
+          <div class="tx"><span class="pip"></span><span data-i18n="con_txline">Capture → relay → ops@inbox.example · sent</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="eyebrow" data-i18n="how_eyebrow">How it works</span>
+        <h2 data-i18n="how_title">From a quiet shot to your inbox in seconds — no app required to receive.</h2>
+        <p data-i18n="how_desc">The camera never holds your email credentials. It speaks only to the SENTRA relay, which delivers the photo to whatever address you set in the console.</p>
+      </div>
+      <div class="steps">
+        <div class="step"><div class="n">STEP 01</div><h3 data-i18n="step1_t">Capture</h3><p data-i18n="step1_d">You trigger a capture from your end. The 5MP sensor takes a sharp photo while the mic captures clear audio.</p><span class="ar">→</span></div>
+        <div class="step"><div class="n">STEP 02</div><h3 data-i18n="step2_t">Relay</h3><p data-i18n="step2_d">The image travels over 4G to the SENTRA relay with the unit's serial — encrypted, no SMTP on the device.</p><span class="ar">→</span></div>
+        <div class="step"><div class="n">STEP 03</div><h3 data-i18n="step3_t">Deliver</h3><p data-i18n="step3_d">The relay looks up your recipients and emails the photo. Change addresses any time — the device stays untouched.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section paper">
+    <div class="wrap">
+      <div class="sec-head"><span class="eyebrow" data-i18n="feat_eyebrow">Small, quiet, connected</span><h2 data-i18n="feat_title">Small enough to disappear into a room — and still report back.</h2></div>
+      <div class="fgrid">
+        <div class="fcard"><div class="ic">◎</div><h3 data-i18n="f1_t">5MP HD photo</h3><p data-i18n="f1_d">OV5640 sensor with hardware JPEG for crisp 5-megapixel stills, sent straight to email.</p></div>
+        <div class="fcard"><div class="ic">🎙</div><h3 data-i18n="f2_t">High-sensitivity mic</h3><p data-i18n="f2_d">A sensitive microphone picks up clear room audio for listening and calls.</p></div>
+        <div class="fcard"><div class="ic">☎</div><h3 data-i18n="f3_t">Two-way voice</h3><p data-i18n="f3_d">VoLTE calling lets you answer or dial the unit and talk in real time.</p></div>
+        <div class="fcard"><div class="ic">✉</div><h3 data-i18n="f4_t">Inbox delivery</h3><p data-i18n="f4_d">Every capture arrives as an email with timestamp, battery and signal in the body.</p></div>
+        <div class="fcard"><div class="ic">▢</div><h3 data-i18n="f5_t">Compact &amp; discreet</h3><p data-i18n="f5_d">Small enough to tuck onto a shelf or desk and go unnoticed.</p></div>
+        <div class="fcard"><div class="ic">⊞</div><h3 data-i18n="f6_t">microSD &amp; buffer</h3><p data-i18n="f6_d">Stores to microSD and resends automatically if the 4G link drops.</p></div>
+      </div>
+      <div class="specstrip">
+        <div class="sp"><div class="v">5MP</div><div class="k" data-i18n="ss1">Photo resolution</div></div>
+        <div class="sp"><div class="v">VoLTE</div><div class="k" data-i18n="ss2">Two-way voice</div></div>
+        <div class="sp"><div class="v">MIC</div><div class="k" data-i18n="ss3">High-sensitivity audio</div></div>
+        <div class="sp"><div class="v">4G</div><div class="k" data-i18n="ss4">EU-band LTE Cat.1</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="ctaband">
+        <div><h2 data-i18n="cta_t">Put eyes and ears where you can't be.</h2><p data-i18n="cta_d">Distributor and volume pricing for the Eurasian market.</p></div>
+        <button class="btn btn-dark" data-go="buy" data-i18n="cta_b">Where to buy →</button>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div class="page" id="page-product">
+  <section class="prodhero">
+    <div class="wrap">
+      <div class="prodtop">
+        <div class="prodshot">
+          <span class="tag" data-i18n="prod_tag">● IN PRODUCTION</span>
+          <div class="pbody"><div class="biglens"></div><div class="mic"></div></div>
+        </div>
+        <div class="prod-meta">
+          <span class="eyebrow" data-i18n="prod_eyebrow">The device</span>
+          <h1>SENTRA P5-EU</h1>
+          <p class="sub" data-i18n="prod_sub">A compact, carry-anywhere 4G camera with two-way voice and a high-sensitivity microphone, tuned for European and Asian LTE bands. You trigger each 5MP photo yourself — it uploads to your inbox, and you can listen and talk over a call.</p>
+          <div class="chips">
+            <span class="chip" data-i18n-html="chip1"><b>5MP</b> HD photos</span>
+            <span class="chip" data-i18n-html="chip2"><b>VoLTE</b> two-way voice</span>
+            <span class="chip" data-i18n-html="chip3"><b>Hi-sens</b> microphone</span>
+            <span class="chip" data-i18n-html="chip4"><b>Compact</b> &amp; discreet</span>
+            <span class="chip" data-i18n-html="chip5"><b>4G</b> EU-band</span>
+          </div>
+          <div class="hero-actions">
+            <button class="btn btn-primary" data-go="buy" data-i18n="prod_buy">Where to buy</button>
+            <button class="btn btn-ghost" data-go="admin" data-i18n="prod_console">See the console</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="sec-head"><span class="eyebrow" data-i18n="spec_eyebrow">Specifications</span><h2 data-i18n="spec_title">What's inside the housing.</h2></div>
+      <div class="spectable">
+        <div class="row"><div class="c1" data-i18n="sp_sensor_l">Image sensor</div><div class="c2" data-i18n-html="sp_sensor_v"><b>5 MP</b> OV5640, hardware JPEG output</div></div>
+        <div class="row"><div class="c1" data-i18n="sp_audio_l">Audio</div><div class="c2" data-i18n="sp_audio_v">High-sensitivity microphone + speaker</div></div>
+        <div class="row"><div class="c1" data-i18n="sp_cap_l">Capture</div><div class="c2" data-i18n="sp_cap_v">On-demand only — you trigger every capture from your end (no timed or scheduled shots)</div></div>
+        <div class="row"><div class="c1" data-i18n="sp_net_l">Network</div><div class="c2" data-i18n-html="sp_net_v"><b>LTE Cat.1</b>, EU-band module (Quectel EG915U-EU class)</div></div>
+        <div class="row"><div class="c1" data-i18n="sp_voice_l">Voice</div><div class="c2" data-i18n="sp_voice_v">VoLTE two-way audio · answer &amp; dial</div></div>
+        <div class="row"><div class="c1" data-i18n="sp_del_l">Delivery</div><div class="c2" data-i18n="sp_del_v">Photo to email via SENTRA relay (no SMTP on device)</div></div>
+        <div class="row"><div class="c1" data-i18n="sp_stor_l">Storage</div><div class="c2" data-i18n="sp_stor_v">microSD up to 32 GB · offline buffer &amp; auto-resend</div></div>
+        <div class="row"><div class="c1" data-i18n="sp_pow_l">Power</div><div class="c2" data-i18n="sp_pow_v">Rechargeable Li-battery · USB-C</div></div>
+        <div class="row"><div class="c1" data-i18n="sp_form_l">Form factor</div><div class="c2" data-i18n="sp_form_v">Compact &amp; discreet — easy to place out of sight</div></div>
+        <div class="row"><div class="c1" data-i18n="sp_sim_l">SIM</div><div class="c2" data-i18n="sp_sim_v">Nano-SIM · roaming-capable for cross-border use</div></div>
+        <div class="row"><div class="c1" data-i18n="sp_ota_l">Updates</div><div class="c2" data-i18n="sp_ota_v">Remote OTA firmware</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section paper">
+    <div class="wrap">
+      <div class="sec-head"><span class="eyebrow" data-i18n="use_eyebrow">Where it earns its keep</span><h2 data-i18n="use_title">One small camera, many quiet jobs.</h2></div>
+      <div class="fgrid">
+        <div class="fcard"><div class="ic">⌂</div><h3 data-i18n="u1_t">Home &amp; rooms</h3><p data-i18n="u1_d">Check in on a room, a pet, or family while you're away.</p></div>
+        <div class="fcard"><div class="ic">▤</div><h3 data-i18n="u2_t">Shops &amp; offices</h3><p data-i18n="u2_d">Keep a quiet eye and ear on a space between visits.</p></div>
+        <div class="fcard"><div class="ic">✦</div><h3 data-i18n="u3_t">Carry it with you</h3><p data-i18n="u3_d">Pocket-sized to take along, capture on the spot, and send.</p></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div class="page" id="page-buy">
+  <section class="section">
+    <div class="wrap">
+      <div class="sec-head"><span class="eyebrow" data-i18n="buy_eyebrow">Where to buy</span><h2 data-i18n="buy_title">Get your SENTRA P5.</h2>
+        <p data-i18n="buy_desc">Available through our official marketplace stores. Choose your platform below.</p></div>
+      <div class="buygrid">
+        <div class="storecard">
+          <div class="slogo ali">AliExpress</div>
+          <div class="stag" data-i18n="store_ali_tag">速卖通 · Global store</div>
+          <p data-i18n="store_ali_desc">Worldwide shipping across Europe and Asia, with buyer protection included.</p>
+          <a class="sbtn" href="https://www.aliexpress.com" target="_blank" rel="noopener" data-i18n="store_ali_btn">Buy on AliExpress →</a>
+        </div>
+        <div class="storecard">
+          <div class="slogo amz">amazon</div>
+          <div class="stag" data-i18n="store_amz_tag">Prime delivery</div>
+          <p data-i18n="store_amz_desc">Fast Prime delivery in supported European marketplaces.</p>
+          <a class="sbtn" href="https://www.amazon.com" target="_blank" rel="noopener" data-i18n="store_amz_btn">Buy on Amazon →</a>
+        </div>
+      </div>
+      <div class="buy-note" data-i18n="buy_note">Links open the marketplace in a new tab. (Demo — replace with your real listing URLs.)</div>
+    </div>
+  </section>
+</div>
+
+<div class="page" id="page-contact">
+  <section class="section">
+    <div class="wrap">
+      <div class="sec-head"><span class="eyebrow" data-i18n="ct_eyebrow">Contact</span><h2 data-i18n="ct_title">Tell us where you need eyes and ears.</h2>
+        <p data-i18n="ct_desc">Distributor enquiries, volume pricing and integration questions for the Eurasian market.</p></div>
+      <div class="contact-grid">
+        <div>
+          <div class="field"><label data-i18n="ct_name">Name</label><input id="cf-name" type="text" data-i18n-ph="ct_name_ph" placeholder="Your name"></div>
+          <div class="field"><label data-i18n="ct_email">Work email</label><input id="cf-email" type="email" placeholder="you@company.com"></div>
+          <div class="field"><label data-i18n="ct_region">Country / region</label>
+            <select id="cf-region"><option value="" data-i18n="ct_select">Select…</option><option>Germany</option><option>France</option>
+              <option>Poland</option><option>Türkiye</option><option>Kazakhstan</option><option>UAE</option>
+              <option>India</option><option data-i18n="ct_other">Other (Eurasia)</option></select></div>
+          <div class="field"><label data-i18n="ct_help">How can we help?</label><textarea id="cf-msg" data-i18n-ph="ct_help_ph" placeholder="Units needed, use case, timeline…"></textarea></div>
+          <button class="btn btn-primary" id="cf-send" data-i18n="ct_send">Send enquiry</button>
+          <div class="form-note" id="cf-note"></div>
+        </div>
+        <div class="cinfo">
+          <div class="blk"><div class="ck" data-i18n="ct_sales">Sales</div><div class="cv">sales@sentra-cam.com<span data-i18n="ct_sales_d">Distributor &amp; volume enquiries</span></div></div>
+          <div class="blk"><div class="ck" data-i18n="ct_support">Support</div><div class="cv">support@sentra-cam.com<span data-i18n="ct_support_d">Setup, firmware, RMA</span></div></div>
+          <div class="blk"><div class="ck" data-i18n="ct_cov">Coverage</div><div class="cv" data-i18n-html="ct_cov_v">Europe · Middle East · Central &amp; South Asia<span>EU-band hardware, not sold in mainland China</span></div></div>
+          <div class="blk"><div class="ck" data-i18n="ct_lead">Lead time</div><div class="cv" data-i18n-html="ct_lead_v">Samples in ~2 weeks<span>Volume orders quoted on request</span></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="page" id="page-admin">
+  <div class="authwrap" id="authView">
+    <div class="authbox">
+      <div class="auth-banner" id="authBanner" style="display:none"><span id="authBannerText"></span><button id="bannerClose">×</button></div>
+      <div class="authhead"><div class="brand"><span class="glyph"></span>SENTRA<small>Inbox</small></div></div>
+
+      <div class="authview on" id="view-login">
+        <div class="acols">
+          <div class="acol">
+            <h2 data-i18n="au_register">Register</h2>
+            <button class="auth-btn block amber" id="goRegister" data-i18n="au_create_btn">Create a SENTRA Inbox account</button>
+            <p class="muted" style="margin-top:18px" data-i18n="au_reg_blurb">You'll need a SENTRA Inbox account to receive photos from your camera. To register, have your device serial number ready.</p>
+          </div>
+          <div class="vsep"></div>
+          <div class="acol">
+            <h2 data-i18n="au_login">Log in</h2>
+            <p class="muted" data-i18n="au_login_blurb">Log in to your SENTRA Inbox account and receive photos from your camera.</p>
+            <label class="auth-label" data-i18n="au_email">Email</label>
+            <input class="auth-input" id="lg-email" type="email" placeholder="you@company.com">
+            <label class="auth-label" data-i18n="au_password">Password</label>
+            <input class="auth-input" id="lg-pass" type="password" placeholder="••••••••">
+            <div class="auth-row">
+              <select class="auth-select" id="lg-lang"><option value="en">English</option><option value="zh">中文</option></select>
+              <button class="auth-btn" id="lg-go" data-i18n="au_login_btn">Log in</button>
+            </div>
+            <div class="auth-foot"><button class="auth-link" id="goForgot" data-i18n="au_forgot">Forgot your password?</button></div>
+            <div class="auth-note err" id="lg-note"></div>
+          </div>
+        </div>
+        <div class="demo-bar">
+          <button class="auth-btn" id="demoLogin" data-i18n="au_demo_btn">Log in DEMO mode</button>
+          <p data-i18n="au_demo_text">Access SENTRA Inbox as a demo user. You won't need a real camera.</p>
+        </div>
+      </div>
+
+      <div class="authview" id="view-register">
+        <h2 style="font-family:var(--disp);font-weight:700;font-size:24px;color:var(--cyan)" data-i18n="au_reg_title">Create your SENTRA Inbox account</h2>
+        <hr class="authhr">
+        <div class="reg-grid">
+          <div>
+            <label class="auth-label" data-i18n="au_reg_email">Enter your email</label>
+            <input class="auth-input" id="rg-email" type="email">
+            <label class="auth-label" data-i18n="au_reg_pass">Choose your password</label>
+            <input class="auth-input" id="rg-pass" type="password">
+            <label class="auth-label" data-i18n="au_reg_pass2">Repeat your password</label>
+            <input class="auth-input" id="rg-pass2" type="password">
+          </div>
+          <div>
+            <label class="auth-label" data-i18n="au_reg_serial">Device serial number (*)</label>
+            <input class="auth-input" id="rg-serial" placeholder="SN-4G-…">
+            <p class="reg-help" data-i18n="au_reg_help1">(*) Printed on the SENTRA Inbox access pass and on your camera's control box.</p>
+            <p class="reg-help" data-i18n="au_reg_help2">– You'll be able to associate more than one camera to the same account.</p>
+          </div>
+        </div>
+        <div style="text-align:right; margin-top:8px"><button class="auth-btn" id="rg-go" data-i18n="au_reg_create">Create account</button></div>
+        <div class="auth-note err" id="rg-note" style="text-align:right"></div>
+        <div class="backrow"><button class="auth-link" data-view="login" data-i18n="au_back_login">← Back to log in</button></div>
+      </div>
+
+      <div class="authview" id="view-forgot">
+        <h2 style="font-family:var(--disp);font-weight:700;font-size:24px;color:var(--cyan)" data-i18n="au_fg_title">Reset your password</h2>
+        <hr class="authhr">
+        <p class="muted" style="color:var(--muted); max-width:34em; margin-bottom:18px" data-i18n="au_fg_blurb">Enter the email you registered with. We'll send a link to reset your password to that address.</p>
+        <div style="max-width:380px">
+          <label class="auth-label" data-i18n="au_fg_email">Registered email</label>
+          <input class="auth-input" id="fg-email" type="email" placeholder="you@company.com">
+          <button class="auth-btn block" id="fg-go" data-i18n="au_fg_send">Send reset link</button>
+          <div class="auth-note" id="fg-note"></div>
+        </div>
+        <div class="backrow"><button class="auth-link" data-view="login" data-i18n="au_back_login">← Back to log in</button></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="admin" id="consoleView" style="display:none">
+    <aside class="aside">
+      <div class="ah" data-i18n="ad_manage">Manage</div>
+      <div class="amenu">
+        <button class="on" data-tab="devices"><span class="mi">▣</span><span data-i18n="ad_devices">Devices</span></button>
+        <button data-tab="recipients"><span class="mi">✉</span><span data-i18n="ad_recipients">Recipients</span></button>
+        <button data-tab="account"><span class="mi">◔</span><span data-i18n="ad_settings">Settings</span></button>
+      </div>
+      <div class="signout"><div class="amenu"><button id="signout"><span class="mi">⤷</span><span data-i18n="ad_signout">Sign out</span></button></div></div>
+    </aside>
+    <div class="acontent">
+      <div class="apanel on" id="tab-devices">
+        <div class="atitle" data-i18n="ad_devices">Devices</div>
+        <div class="asub" data-i18n="ad_devices_sub">Select a unit to view its photos and manage where they're mailed.</div>
+        <div class="dev-layout">
+          <div>
+            <div class="dlist" id="dlist"></div>
+            <button class="addbtn" id="showAdd" style="width:100%; margin-top:10px" data-i18n="ad_add">+ Add device</button>
+            <div class="addform" id="addForm">
+              <div class="ff">
+                <label data-i18n="ad_serial">Serial number</label>
+                <input id="ndSerial" placeholder="SN-4G-…">
+                <label data-i18n="ad_devname">Device name</label>
+                <input id="ndName" data-i18n-ph="ad_devname_ph" placeholder="e.g. Bedroom">
+              </div>
+              <div class="fa"><button class="go" id="ndGo" data-i18n="ad_add_btn">Add device</button><button class="cx" id="ndCancel" data-i18n="ad_cancel">Cancel</button></div>
+              <div class="recerr" id="ndErr"></div>
+            </div>
+          </div>
+          <div id="ddetail"></div>
+        </div>
+      </div>
+      <div class="apanel" id="tab-recipients">
+        <div class="atitle" data-i18n="ad_recipients">Recipients</div>
+        <div class="asub" data-i18n="ad_recipients_sub">Every address currently set to receive photos, across all devices.</div>
+        <div class="gtable" id="gtable"></div>
+      </div>
+      <div class="apanel" id="tab-account">
+        <div class="atitle" data-i18n="ad_settings">Settings</div>
+        <div class="asub" data-i18n="ad_settings_sub">Account and delivery preferences.</div>
+        <div class="spectable" style="margin-top:26px; max-width:620px">
+          <div class="row"><div class="c1" data-i18n="set_account">Account</div><div class="c2" id="set-account-email">ops@inbox.example</div></div>
+          <div class="row"><div class="c1" data-i18n="set_relay">Relay region</div><div class="c2" data-i18n-html="set_relay_v"><b>EU-Frankfurt</b></div></div>
+          <div class="row"><div class="c1" data-i18n="set_quality">Image quality</div><div class="c2" data-i18n="set_quality_v">High (full 5MP)</div></div>
+          <div class="row"><div class="c1" data-i18n="set_retain">Storage retention</div><div class="c2" data-i18n="set_retain_v">15 days, then auto-clear</div></div>
+          <div class="row"><div class="c1" data-i18n="set_plan">Plan</div><div class="c2" data-i18n="set_plan_v">Unlimited devices · up to 3 recipients each</div></div>
+        </div>
+        <div class="setcard">
+          <h3 data-i18n="pw_title">Change password</h3>
+          <p class="sd" data-i18n="pw_sub">Update the password you use to sign in to the console.</p>
+          <label data-i18n="pw_current">Current password</label>
+          <input id="pw-cur" type="password">
+          <label data-i18n="pw_new">New password</label>
+          <input id="pw-new" type="password">
+          <label data-i18n="pw_new2">Repeat new password</label>
+          <input id="pw-new2" type="password">
+          <button class="pwbtn" id="pw-go" data-i18n="pw_save">Update password</button>
+          <div class="pwnote" id="pw-note"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="lightbox" id="lightbox">
+  <div class="lbinner">
+    <div class="lbimg" id="lbimg"></div>
+    <div class="lbbar">
+      <div class="li" id="lbinfo"></div>
+      <div class="lacts">
+        <button class="lc del" id="lbdel" data-i18n="lb_delete">Delete</button>
+        <button class="lc" id="lbclose" data-i18n="lb_close">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer class="foot">
+  <div class="wrap foot-inner">
+    <div class="fb" data-i18n-html="foot_brand">SENTRA P5 · DISCREET 4G CAMERA<br>EU-band hardware · Hi-sensitivity mic · VoLTE<br>© 2026 SENTRA — demo interface</div>
+    <div class="fl">
+      <button data-go="home" data-i18n="nav_home">Home</button><button data-go="product" data-i18n="nav_product">Product</button>
+      <button data-go="buy" data-i18n="nav_buy">Where to buy</button>
+      <button data-go="contact" data-i18n="nav_contact">Contact</button><button data-go="admin" data-i18n="nav_console">Console</button>
+    </div>
+  </div>
+</footer>
+<script>
+(function(){
+  var T={
+    en:{
+      nav_home:"Home", nav_product:"Product", nav_buy:"Where to buy", nav_buy_cta:"Buy now →", nav_contact:"Contact", nav_console:"Console", nav_menu:"Menu",
+      hero_eyebrow:"Discreet 4G camera · Hi-sensitivity mic · VoLTE", hero_l1:"It watches.", hero_l2:"It listens.", hero_l3:"It answers.",
+      hero_lead:"A pocket-sized 4G camera you carry with you — trigger a sharp 5-megapixel photo whenever you want, hear your surroundings through a high-sensitivity mic, and take a two-way call to check in.",
+      hero_see:"See the device", hero_buy:"Where to buy",
+      triad_see_k:"SEE", triad_see_v:"5MP HD photo", triad_hear_k:"HEAR", triad_hear_v:"High-sensitivity mic", triad_talk_k:"TALK", triad_talk_v:"Two-way VoLTE voice",
+      con_unit:"Unit · Pocket Cam", con_status:"Status", con_online:"● Online", con_signal:"Signal", con_battery:"Battery", con_lasttx:"Last TX", con_ago:"00:03 ago",
+      con_txline:"Capture → relay → ops@inbox.example · sent",
+      how_eyebrow:"How it works", how_title:"From a quiet shot to your inbox in seconds — no app required to receive.",
+      how_desc:"The camera never holds your email credentials. It speaks only to the SENTRA relay, which delivers the photo to whatever address you set in the console.",
+      step1_t:"Capture", step1_d:"You trigger a capture from your end. The 5MP sensor takes a sharp photo while the mic captures clear audio.",
+      step2_t:"Relay", step2_d:"The image travels over 4G to the SENTRA relay with the unit's serial — encrypted, no SMTP on the device.",
+      step3_t:"Deliver", step3_d:"The relay looks up your recipients and emails the photo. Change addresses any time — the device stays untouched.",
+      feat_eyebrow:"Small, quiet, connected", feat_title:"Small enough to disappear into a room — and still report back.",
+      f1_t:"5MP HD photo", f1_d:"OV5640 sensor with hardware JPEG for crisp 5-megapixel stills, sent straight to email.",
+      f2_t:"High-sensitivity mic", f2_d:"A sensitive microphone picks up clear room audio for listening and calls.",
+      f3_t:"Two-way voice", f3_d:"VoLTE calling lets you answer or dial the unit and talk in real time.",
+      f4_t:"Inbox delivery", f4_d:"Every capture arrives as an email with timestamp, battery and signal in the body.",
+      f5_t:"Compact & discreet", f5_d:"Small enough to tuck onto a shelf or desk and go unnoticed.",
+      f6_t:"microSD & buffer", f6_d:"Stores to microSD and resends automatically if the 4G link drops.",
+      ss1:"Photo resolution", ss2:"Two-way voice", ss3:"High-sensitivity audio", ss4:"EU-band LTE Cat.1",
+      cta_t:"Put eyes and ears where you can't be.", cta_d:"Distributor and volume pricing for the Eurasian market.", cta_b:"Where to buy →",
+      prod_tag:"● IN PRODUCTION", prod_eyebrow:"The device",
+      prod_sub:"A compact, carry-anywhere 4G camera with two-way voice and a high-sensitivity microphone, tuned for European and Asian LTE bands. You trigger each 5MP photo yourself — it uploads to your inbox, and you can listen and talk over a call.",
+      chip1:"<b>5MP</b> HD photos", chip2:"<b>VoLTE</b> two-way voice", chip3:"<b>Hi-sens</b> microphone", chip4:"<b>Compact</b> & discreet", chip5:"<b>4G</b> EU-band",
+      prod_buy:"Where to buy", prod_console:"See the console",
+      spec_eyebrow:"Specifications", spec_title:"What's inside the housing.",
+      sp_sensor_l:"Image sensor", sp_sensor_v:"<b>5 MP</b> OV5640, hardware JPEG output",
+      sp_audio_l:"Audio", sp_audio_v:"High-sensitivity microphone + speaker",
+      sp_cap_l:"Capture", sp_cap_v:"On-demand only — you trigger every capture from your end (no timed or scheduled shots)",
+      sp_net_l:"Network", sp_net_v:"<b>LTE Cat.1</b>, EU-band module (Quectel EG915U-EU class)",
+      sp_voice_l:"Voice", sp_voice_v:"VoLTE two-way audio · answer & dial",
+      sp_del_l:"Delivery", sp_del_v:"Photo to email via SENTRA relay (no SMTP on device)",
+      sp_stor_l:"Storage", sp_stor_v:"microSD up to 32 GB · offline buffer & auto-resend",
+      sp_pow_l:"Power", sp_pow_v:"Rechargeable Li-battery · USB-C",
+      sp_form_l:"Form factor", sp_form_v:"Compact & discreet — easy to place out of sight",
+      sp_sim_l:"SIM", sp_sim_v:"Nano-SIM · roaming-capable for cross-border use",
+      sp_ota_l:"Updates", sp_ota_v:"Remote OTA firmware",
+      use_eyebrow:"Where it earns its keep", use_title:"One small camera, many quiet jobs.",
+      u1_t:"Home & rooms", u1_d:"Check in on a room, a pet, or family while you're away.",
+      u2_t:"Shops & offices", u2_d:"Keep a quiet eye and ear on a space between visits.",
+      u3_t:"Carry it with you", u3_d:"Pocket-sized to take along, capture on the spot, and send.",
+      buy_eyebrow:"Where to buy", buy_title:"Get your SENTRA P5.", buy_desc:"Available through our official marketplace stores. Choose your platform below.",
+      store_ali_tag:"AliExpress · Global store", store_ali_desc:"Worldwide shipping across Europe and Asia, with buyer protection included.", store_ali_btn:"Buy on AliExpress →",
+      store_amz_tag:"Prime delivery", store_amz_desc:"Fast Prime delivery in supported European marketplaces.", store_amz_btn:"Buy on Amazon →",
+      buy_note:"Links open the marketplace in a new tab. (Demo — replace with your real listing URLs.)",
+      ct_eyebrow:"Contact", ct_title:"Tell us where you need eyes and ears.", ct_desc:"Distributor enquiries, volume pricing and integration questions for the Eurasian market.",
+      ct_name:"Name", ct_name_ph:"Your name", ct_email:"Work email", ct_region:"Country / region", ct_select:"Select…", ct_other:"Other (Eurasia)",
+      ct_help:"How can we help?", ct_help_ph:"Units needed, use case, timeline…", ct_send:"Send enquiry",
+      ct_sales:"Sales", ct_sales_d:"Distributor & volume enquiries", ct_support:"Support", ct_support_d:"Setup, firmware, RMA",
+      ct_cov:"Coverage", ct_cov_v:"Europe · Middle East · Central & South Asia<span>EU-band hardware, not sold in mainland China</span>",
+      ct_lead:"Lead time", ct_lead_v:"Samples in ~2 weeks<span>Volume orders quoted on request</span>",
+      ct_err_need:"Add your name and email first.", ct_err_email:"That email doesn’t look right.", ct_ok:"Thanks, {n}. We’ll reply within one business day. (Demo — nothing was sent.)",
+      au_register:"Register", au_create_btn:"Create a SENTRA Inbox account",
+      au_reg_blurb:"You'll need a SENTRA Inbox account to receive photos from your camera. To register, have your device serial number ready.",
+      au_login:"Log in", au_login_blurb:"Log in to your SENTRA Inbox account and receive photos from your camera.",
+      au_email:"Email", au_password:"Password", au_login_btn:"Log in", au_forgot:"Forgot your password?",
+      au_demo_btn:"Log in DEMO mode", au_demo_text:"Access SENTRA Inbox as a demo user. You won't need a real camera.",
+      au_reg_title:"Create your SENTRA Inbox account", au_reg_email:"Enter your email", au_reg_pass:"Choose your password", au_reg_pass2:"Repeat your password",
+      au_reg_serial:"Device serial number (*)", au_reg_help1:"(*) Printed on the SENTRA Inbox access pass and on your camera's control box.",
+      au_reg_help2:"– You'll be able to associate more than one camera to the same account.", au_reg_create:"Create account", au_back_login:"← Back to log in",
+      au_fg_title:"Reset your password", au_fg_blurb:"Enter the email you registered with. We'll send a link to reset your password to that address.",
+      au_fg_email:"Registered email", au_fg_send:"Send reset link",
+      au_err_login:"Enter an email and password to continue.", au_err_email:"That email doesn’t look right.",
+      au_err_regfields:"Fill in every field, including the serial number.", au_err_pwlen:"Password must be at least 8 characters.", au_err_pwmatch:"The two passwords don't match.",
+      au_ok_reg:"Account created. Signing you in…",
+      au_fg_ok:"If that email is registered, a reset link is on its way. (Demo — nothing was sent.)", au_fg_err:"Enter the email you registered with.",
+      au_banner_signout:"Signed out successfully.",
+      ad_manage:"Manage", ad_devices:"Devices", ad_recipients:"Recipients", ad_settings:"Settings", ad_signout:"Sign out",
+      ad_devices_sub:"Select a unit to view its photos and manage where they're mailed.",
+      ad_recipients_sub:"Every address currently set to receive photos, across all devices.",
+      ad_settings_sub:"Account and delivery preferences.",
+      ad_add:"+ Add device", ad_serial:"Serial number", ad_devname:"Device name", ad_devname_ph:"e.g. Bedroom", ad_add_btn:"Add device", ad_cancel:"Cancel",
+      ad_online:"Online", ad_offline:"Offline", ad_photos:"photos", ad_battery:"Battery", ad_signal:"Signal", ad_lastseen:"Last seen", ad_photos_k:"Photos",
+      ad_recent:"Recent captures", ad_filter_all:"All", ad_filter_today:"Today", ad_filter_yest:"Yesterday", ad_filter_earlier:"Earlier",
+      ad_album_notice:"Photos are kept for 15 days, then auto-deleted · Devices: unlimited · Recipients: up to 3 per device",
+      ad_nophotos:"No photos captured yet from this unit.", ad_nophotos_f:"No photos in this range.",
+      ad_mailto:"Mail photos to", ad_applies:"Applies instantly — the device isn’t touched",
+      ad_norec:"No recipients yet. Add an address below and photos from this unit will be mailed there.",
+      ad_addr_ph:"name@company.com", ad_add_rec:"Add", ad_rec_invalid:"Enter a valid email address.", ad_rec_dupe:"That address is already on the list.",
+      ad_rec_full:"Maximum of 3 recipients reached. Remove one to add another.", ad_rec_count:"{n} / 3",
+      ad_rename:"Rename", ad_delete:"Delete device", ad_del_confirm:"Delete {n}? Its photos and recipients will be removed from the console.",
+      ad_del_yes:"Delete", ad_del_no:"Keep", ad_selectadd:"Select or add a device to manage it.", ad_nodevices:"No devices yet. Add one below to get started.",
+      ad_save:"Save", ad_err_addfields:"Enter both a serial number and a name.", ad_err_serialdupe:"That serial is already registered.",
+      ad_g_device:"Device", ad_g_recipient:"Recipient", ad_g_status:"Status", ad_g_live:"Live", ad_g_paused:"Paused", ad_g_none:"No recipients set on any device yet.",
+      set_account:"Account", set_relay:"Relay region", set_relay_v:"<b>EU-Frankfurt</b>", set_quality:"Image quality", set_quality_v:"High (full 5MP)",
+      set_retain:"Storage retention", set_retain_v:"15 days, then auto-clear", set_plan:"Plan", set_plan_v:"Unlimited devices · up to 3 recipients each",
+      pw_title:"Change password", pw_sub:"Update the password you use to sign in to the console.",
+      pw_current:"Current password", pw_new:"New password", pw_new2:"Repeat new password", pw_save:"Update password",
+      pw_err_fields:"Fill in all three fields.", pw_err_len:"New password must be at least 8 characters.", pw_err_match:"The new passwords don't match.", pw_ok:"Password updated. (Demo — nothing was saved.)",
+      lb_delete:"Delete", lb_close:"Close",
+      trg_manual:"Manual", trg_oncall:"On-call",
+      foot_brand:"SENTRA P5 · DISCREET 4G CAMERA<br>EU-band hardware · Hi-sensitivity mic · VoLTE<br>© 2026 SENTRA — demo interface"
+    },
+    zh:{
+      nav_home:"首页", nav_product:"产品", nav_buy:"购买渠道", nav_buy_cta:"立即购买 →", nav_contact:"联系我们", nav_console:"控制台", nav_menu:"菜单",
+      hero_eyebrow:"隐秘 4G 相机 · 高灵敏麦克风 · VoLTE", hero_l1:"它在看。", hero_l2:"它在听。", hero_l3:"它能通话。",
+      hero_lead:"一台口袋大小、可随身携带的 4G 相机——想拍就拍,由你随时触发清晰的 500 万像素照片送进邮箱,用高灵敏麦克风听清周围,需要时拨入双向通话查看情况。",
+      hero_see:"查看设备", hero_buy:"购买渠道",
+      triad_see_k:"看", triad_see_v:"500 万像素高清照片", triad_hear_k:"听", triad_hear_v:"高灵敏麦克风", triad_talk_k:"通话", triad_talk_v:"VoLTE 双向语音",
+      con_unit:"设备 · 随身机", con_status:"状态", con_online:"● 在线", con_signal:"信号", con_battery:"电量", con_lasttx:"上次传输", con_ago:"3 分钟前",
+      con_txline:"拍照 → 中转 → ops@inbox.example · 已发送",
+      how_eyebrow:"工作原理", how_title:"从悄悄一拍到进你的邮箱,只要几秒——接收照片无需任何 App。",
+      how_desc:"相机从不保存你的邮箱密码,它只与 SENTRA 中转服务器通信,由中转把照片发到你在控制台设置的任意邮箱。",
+      step1_t:"拍摄", step1_d:"由你从使用端触发拍照。500 万像素传感器拍下清晰照片,麦克风同时采集清晰声音。",
+      step2_t:"中转", step2_d:"图片连同设备序列号经 4G 加密上传至 SENTRA 中转服务器,设备端不含 SMTP。",
+      step3_t:"送达", step3_d:"中转查出你设置的收件人并发送照片。随时改收件邮箱,设备完全不用动。",
+      feat_eyebrow:"小巧、安静、联网", feat_title:"小到能融进房间——仍持续向你回传。",
+      f1_t:"500 万像素高清照片", f1_d:"OV5640 传感器,硬件 JPEG,拍出清晰的 500 万像素照片,直接发到邮箱。",
+      f2_t:"高灵敏麦克风", f2_d:"灵敏的麦克风捕捉清晰的现场声音,可用于监听和通话。",
+      f3_t:"双向语音", f3_d:"VoLTE 通话,可接听或拨打设备,实时对话。",
+      f4_t:"邮箱送达", f4_d:"每次拍摄都以邮件送达,正文附带时间、电量与信号。",
+      f5_t:"小巧隐秘", f5_d:"小到可以塞在书架或桌上,不易被察觉。",
+      f6_t:"microSD 缓存", f6_d:"存入 microSD,4G 中断后自动补发。",
+      ss1:"照片分辨率", ss2:"双向语音", ss3:"高灵敏音频", ss4:"EU 频段 LTE Cat.1",
+      cta_t:"把眼睛和耳朵放到你到不了的地方。", cta_d:"面向欧亚市场的经销与批量价格。", cta_b:"购买渠道 →",
+      prod_tag:"● 量产中", prod_eyebrow:"产品",
+      prod_sub:"一款小巧、可随身携带、带双向语音和高灵敏麦克风的 4G 相机,针对欧洲与亚洲 LTE 频段优化。每张 500 万像素照片都由你亲自触发——拍完上传到邮箱,并支持通话监听与对话。",
+      chip1:"<b>500万</b> 高清照片", chip2:"<b>VoLTE</b> 双向语音", chip3:"<b>高灵敏</b> 麦克风", chip4:"<b>小巧</b> 隐秘", chip5:"<b>4G</b> EU 频段",
+      prod_buy:"购买渠道", prod_console:"查看控制台",
+      spec_eyebrow:"规格参数", spec_title:"机身里都有什么。",
+      sp_sensor_l:"图像传感器", sp_sensor_v:"<b>500 万像素</b> OV5640,硬件 JPEG 输出",
+      sp_audio_l:"音频", sp_audio_v:"高灵敏麦克风 + 喇叭",
+      sp_cap_l:"拍摄", sp_cap_v:"仅手动触发——每次拍照都由你从使用端触发(无定时、无计划拍照)",
+      sp_net_l:"网络", sp_net_v:"<b>LTE Cat.1</b>,EU 频段模组(Quectel EG915U-EU 级)",
+      sp_voice_l:"语音", sp_voice_v:"VoLTE 双向语音 · 接听与拨打",
+      sp_del_l:"传输", sp_del_v:"经 SENTRA 中转服务器发邮件(设备端无 SMTP)",
+      sp_stor_l:"存储", sp_stor_v:"microSD 最大 32 GB · 离线缓存与自动补发",
+      sp_pow_l:"供电", sp_pow_v:"可充锂电池 · USB-C",
+      sp_form_l:"外形", sp_form_v:"小巧隐秘——易于放在不显眼处",
+      sp_sim_l:"SIM 卡", sp_sim_v:"Nano-SIM · 支持跨境漫游",
+      sp_ota_l:"更新", sp_ota_v:"远程 OTA 固件升级",
+      use_eyebrow:"它的用武之地", use_title:"一台小相机,许多安静的活儿。",
+      u1_t:"家与房间", u1_d:"外出时看看房间、宠物或家人。",
+      u2_t:"店铺与办公室", u2_d:"两次到场之间,安静地看护一处空间。",
+      u3_t:"随身携带", u3_d:"口袋大小,随身带着,现场抓拍即发。",
+      buy_eyebrow:"购买渠道", buy_title:"选购 SENTRA P5。", buy_desc:"通过我们的官方电商店铺购买,选择下方平台。",
+      store_ali_tag:"速卖通 · 全球店铺", store_ali_desc:"全球发货,覆盖欧洲与亚洲,含买家保护。", store_ali_btn:"前往速卖通 →",
+      store_amz_tag:"Prime 配送", store_amz_desc:"在支持的欧洲市场享受 Prime 快速配送。", store_amz_btn:"前往亚马逊 →",
+      buy_note:"链接在新标签页打开。(演示——请替换为你的真实商品链接。)",
+      ct_eyebrow:"联系我们", ct_title:"告诉我们你需要在哪里布设眼睛和耳朵。", ct_desc:"面向欧亚市场的经销咨询、批量价格与集成问题。",
+      ct_name:"姓名", ct_name_ph:"您的姓名", ct_email:"工作邮箱", ct_region:"国家 / 地区", ct_select:"请选择…", ct_other:"其他(欧亚)",
+      ct_help:"需要什么帮助?", ct_help_ph:"所需数量、使用场景、时间安排…", ct_send:"发送咨询",
+      ct_sales:"销售", ct_sales_d:"经销与批量咨询", ct_support:"支持", ct_support_d:"配置、固件、返修",
+      ct_cov:"覆盖区域", ct_cov_v:"欧洲 · 中东 · 中亚与南亚<span>EU 频段硬件,不在中国大陆销售</span>",
+      ct_lead:"交货周期", ct_lead_v:"样机约 2 周<span>批量订单另行报价</span>",
+      ct_err_need:"请先填写姓名和邮箱。", ct_err_email:"邮箱格式好像不太对。", ct_ok:"谢谢,{n}。我们会在一个工作日内回复。(演示——未真正发送。)",
+      au_register:"注册", au_create_btn:"创建 SENTRA Inbox 账户",
+      au_reg_blurb:"接收相机照片需要一个 SENTRA Inbox 账户。注册时请准备好设备序列号。",
+      au_login:"登录", au_login_blurb:"登录你的 SENTRA Inbox 账户,接收相机拍摄的照片。",
+      au_email:"邮箱", au_password:"密码", au_login_btn:"登录", au_forgot:"忘记密码?",
+      au_demo_btn:"以演示模式登录", au_demo_text:"以演示用户身份进入 SENTRA Inbox,无需真实相机。",
+      au_reg_title:"创建你的 SENTRA Inbox 账户", au_reg_email:"输入邮箱", au_reg_pass:"设置密码", au_reg_pass2:"再次输入密码",
+      au_reg_serial:"设备序列号 (*)", au_reg_help1:"(*) 印在 SENTRA Inbox 凭证卡和相机控制盒上。",
+      au_reg_help2:"– 同一账户可关联多台相机。", au_reg_create:"创建账户", au_back_login:"← 返回登录",
+      au_fg_title:"重置密码", au_fg_blurb:"输入你注册时使用的邮箱,我们会向该邮箱发送重置密码的链接。",
+      au_fg_email:"注册邮箱", au_fg_send:"发送重置链接",
+      au_err_login:"请输入邮箱和密码以继续。", au_err_email:"邮箱格式好像不太对。",
+      au_err_regfields:"请填写每一项,包括序列号。", au_err_pwlen:"密码至少需要 8 个字符。", au_err_pwmatch:"两次输入的密码不一致。",
+      au_ok_reg:"账户已创建,正在登录…",
+      au_fg_ok:"如果该邮箱已注册,重置链接即将送达。(演示——未真正发送。)", au_fg_err:"请输入你注册时使用的邮箱。",
+      au_banner_signout:"已成功退出登录。",
+      ad_manage:"管理", ad_devices:"设备", ad_recipients:"收件人", ad_settings:"设置", ad_signout:"退出登录",
+      ad_devices_sub:"选择一台设备,查看它拍摄的照片并管理照片发往哪里。",
+      ad_recipients_sub:"所有设备当前设置的收件邮箱汇总。",
+      ad_settings_sub:"账户与发送偏好。",
+      ad_add:"+ 添加设备", ad_serial:"序列号", ad_devname:"设备名称", ad_devname_ph:"例如:卧室", ad_add_btn:"添加设备", ad_cancel:"取消",
+      ad_online:"在线", ad_offline:"离线", ad_photos:"张照片", ad_battery:"电量", ad_signal:"信号", ad_lastseen:"最近在线", ad_photos_k:"照片",
+      ad_recent:"最近拍摄", ad_filter_all:"全部", ad_filter_today:"今天", ad_filter_yest:"昨天", ad_filter_earlier:"更早",
+      ad_album_notice:"照片仅保留 15 天,之后自动删除 · 设备:可无限绑定 · 收件箱:每台最多 3 个",
+      ad_nophotos:"这台设备还没有拍到照片。", ad_nophotos_f:"该时间段没有照片。",
+      ad_mailto:"照片发送至", ad_applies:"即时生效——无需改动设备",
+      ad_norec:"还没有收件人。在下方添加邮箱,这台设备的照片就会发到那里。",
+      ad_addr_ph:"name@company.com", ad_add_rec:"添加", ad_rec_invalid:"请输入有效的邮箱地址。", ad_rec_dupe:"该地址已在列表中。",
+      ad_rec_full:"已达 3 个收件箱上限,删除一个才能再添加。", ad_rec_count:"{n} / 3",
+      ad_rename:"重命名", ad_delete:"删除设备", ad_del_confirm:"删除「{n}」?它的照片和收件人将从控制台移除。",
+      ad_del_yes:"删除", ad_del_no:"保留", ad_selectadd:"选择或添加一台设备来管理。", ad_nodevices:"还没有设备。在下方添加一台开始使用。",
+      ad_save:"保存", ad_err_addfields:"请同时填写序列号和名称。", ad_err_serialdupe:"该序列号已注册。",
+      ad_g_device:"设备", ad_g_recipient:"收件人", ad_g_status:"状态", ad_g_live:"生效", ad_g_paused:"暂停", ad_g_none:"还没有任何设备设置收件人。",
+      set_account:"账户", set_relay:"中转区域", set_relay_v:"<b>EU-法兰克福</b>", set_quality:"图片质量", set_quality_v:"高(完整 500 万像素)",
+      set_retain:"保留时长", set_retain_v:"15 天后自动清理", set_plan:"套餐", set_plan_v:"设备无限 · 每台最多 3 个收件箱",
+      pw_title:"修改密码", pw_sub:"更新你登录控制台所用的密码。",
+      pw_current:"当前密码", pw_new:"新密码", pw_new2:"再次输入新密码", pw_save:"更新密码",
+      pw_err_fields:"请填写全部三项。", pw_err_len:"新密码至少需要 8 个字符。", pw_err_match:"两次输入的新密码不一致。", pw_ok:"密码已更新。(演示——未真正保存。)",
+      lb_delete:"删除", lb_close:"关闭",
+      trg_manual:"手动", trg_oncall:"通话中",
+      foot_brand:"SENTRA P5 · 隐秘 4G 相机<br>EU 频段硬件 · 高灵敏麦克风 · VoLTE<br>© 2026 SENTRA — 演示界面"
+    }
+  };
+  var lang='en';
+  function t(k){ return (T[lang]&&T[lang][k]!=null)?T[lang][k]:(T.en[k]!=null?T.en[k]:k); }
+  var authed=false, accountEmail='ops@inbox.example', REC_MAX=3;
+
+  function applyLang(l){
+    lang=l;
+    document.documentElement.lang = (l==='zh'?'zh-CN':'en');
+    document.querySelectorAll('[data-i18n]').forEach(function(el){ var k=el.getAttribute('data-i18n'); if(T[l][k]!=null) el.textContent=T[l][k]; });
+    document.querySelectorAll('[data-i18n-html]').forEach(function(el){ var k=el.getAttribute('data-i18n-html'); if(T[l][k]!=null) el.innerHTML=T[l][k]; });
+    document.querySelectorAll('[data-i18n-ph]').forEach(function(el){ var k=el.getAttribute('data-i18n-ph'); if(T[l][k]!=null) el.setAttribute('placeholder',T[l][k]); });
+    document.getElementById('langToggle').textContent = (l==='en'?'中文':'EN');
+    var ls=document.getElementById('lg-lang'); if(ls) ls.value=l;
+    if(authed){ renderList(); renderDetail(); if(document.getElementById('tab-recipients').classList.contains('on')) renderGlobal(); }
+  }
+
+  var pages=['home','product','buy','contact','admin'];
+  function go(name){
+    pages.forEach(function(p){ document.getElementById('page-'+p).classList.toggle('active', p===name); });
+    document.querySelectorAll('#navlinks button').forEach(function(b){ b.classList.toggle('active', b.dataset.go===name); });
+    document.getElementById('navlinks').classList.remove('open');
+    if(name==='admin') renderAuth();
+    window.scrollTo(0,0);
+  }
+  document.addEventListener('click', function(e){ var g=e.target.closest('[data-go]'); if(g) go(g.dataset.go); });
+  document.getElementById('menuBtn').addEventListener('click', function(){ document.getElementById('navlinks').classList.toggle('open'); });
+  document.getElementById('langToggle').addEventListener('click', function(){ applyLang(lang==='en'?'zh':'en'); });
+
+  function renderAuth(){ document.getElementById('authView').style.display = authed?'none':'flex'; document.getElementById('consoleView').style.display = authed?'grid':'none'; }
+  function showView(v){ ['login','register','forgot'].forEach(function(x){ document.getElementById('view-'+x).classList.toggle('on', x===v); }); }
+  function banner(msg){ var b=document.getElementById('authBanner'); document.getElementById('authBannerText').textContent=msg; b.style.display='flex'; }
+  document.getElementById('bannerClose').addEventListener('click', function(){ document.getElementById('authBanner').style.display='none'; });
+  document.getElementById('goRegister').addEventListener('click', function(){ showView('register'); });
+  document.getElementById('goForgot').addEventListener('click', function(){ showView('forgot'); });
+  document.querySelectorAll('[data-view]').forEach(function(b){ b.addEventListener('click', function(){ showView(b.dataset.view); }); });
+  document.getElementById('lg-lang').addEventListener('change', function(){ applyLang(this.value); });
+
+  function emailOk(v){ return /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v); }
+  function loginSuccess(email){ accountEmail=email||accountEmail; authed=true; document.getElementById('set-account-email').textContent=accountEmail; renderAuth(); renderList(); renderDetail(); }
+
+  function doLogin(){
+    var em=document.getElementById('lg-email').value.trim(), pw=document.getElementById('lg-pass').value.trim(), n=document.getElementById('lg-note');
+    if(!em||!pw){ n.textContent=t('au_err_login'); return; }
+    if(!emailOk(em)){ n.textContent=t('au_err_email'); return; }
+    n.textContent=''; loginSuccess(em);
+  }
+  document.getElementById('lg-go').addEventListener('click', doLogin);
+  document.getElementById('lg-pass').addEventListener('keydown', function(e){ if(e.key==='Enter') doLogin(); });
+  document.getElementById('demoLogin').addEventListener('click', function(){ loginSuccess('demo@sentra-cam.com'); });
+
+  document.getElementById('rg-go').addEventListener('click', function(){
+    var em=document.getElementById('rg-email').value.trim(), p1=document.getElementById('rg-pass').value, p2=document.getElementById('rg-pass2').value, sn=document.getElementById('rg-serial').value.trim(), n=document.getElementById('rg-note');
+    if(!em||!p1||!p2||!sn){ n.className='auth-note err'; n.textContent=t('au_err_regfields'); return; }
+    if(!emailOk(em)){ n.className='auth-note err'; n.textContent=t('au_err_email'); return; }
+    if(p1.length<8){ n.className='auth-note err'; n.textContent=t('au_err_pwlen'); return; }
+    if(p1!==p2){ n.className='auth-note err'; n.textContent=t('au_err_pwmatch'); return; }
+    n.className='auth-note ok'; n.textContent=t('au_ok_reg');
+    if(!devices.some(function(d){return d.serial.toLowerCase()===sn.toLowerCase();})){
+      var scenes=['room','hall','desk'];
+      devices.push({serial:sn, name:sn, scene:scenes[devices.length%3], online:true, battery:100, signal:4, _fresh:true, recipients:[em], photos:[]});
+      selected=devices.length-1;
+    }
+    setTimeout(function(){ loginSuccess(em); }, 600);
+  });
+
+  document.getElementById('fg-go').addEventListener('click', function(){
+    var em=document.getElementById('fg-email').value.trim(), n=document.getElementById('fg-note');
+    if(!em||!emailOk(em)){ n.className='auth-note err'; n.textContent=t('au_fg_err'); return; }
+    n.className='auth-note ok'; n.textContent=t('au_fg_ok');
+  });
+
+  document.getElementById('signout').addEventListener('click', function(){ authed=false; document.getElementById('lg-pass').value=''; showView('login'); banner(t('au_banner_signout')); renderAuth(); });
+
+  document.getElementById('cf-send').addEventListener('click', function(){
+    var n=document.getElementById('cf-name').value.trim(), em=document.getElementById('cf-email').value.trim(), note=document.getElementById('cf-note');
+    if(!n||!em){ note.style.color='var(--red)'; note.textContent=t('ct_err_need'); return; }
+    if(!emailOk(em)){ note.style.color='var(--red)'; note.textContent=t('ct_err_email'); return; }
+    note.style.color='var(--cyan)'; note.textContent=t('ct_ok').replace('{n}',n);
+    document.getElementById('cf-name').value=''; document.getElementById('cf-email').value=''; document.getElementById('cf-msg').value=''; document.getElementById('cf-region').value='';
+  });
+
+  document.querySelectorAll('.amenu button[data-tab]').forEach(function(b){
+    b.addEventListener('click', function(){
+      document.querySelectorAll('.amenu button[data-tab]').forEach(function(x){x.classList.remove('on')});
+      b.classList.add('on');
+      var tab=b.dataset.tab;
+      document.querySelectorAll('.apanel').forEach(function(p){p.classList.remove('on')});
+      document.getElementById('tab-'+tab).classList.add('on');
+      if(tab==='recipients') renderGlobal();
+    });
+  });
+
+  document.getElementById('pw-go').addEventListener('click', function(){
+    var c=document.getElementById('pw-cur').value, a=document.getElementById('pw-new').value, b=document.getElementById('pw-new2').value, n=document.getElementById('pw-note');
+    if(!c||!a||!b){ n.className='pwnote err'; n.textContent=t('pw_err_fields'); return; }
+    if(a.length<8){ n.className='pwnote err'; n.textContent=t('pw_err_len'); return; }
+    if(a!==b){ n.className='pwnote err'; n.textContent=t('pw_err_match'); return; }
+    n.className='pwnote ok'; n.textContent=t('pw_ok');
+    document.getElementById('pw-cur').value=''; document.getElementById('pw-new').value=''; document.getElementById('pw-new2').value='';
+  });
+
+  function P(t1,trg,day){ return {t:t1, trg:trg, day:day}; }
+  var devices=[
+    {serial:'SN-4G-0A21', name:'Pocket Cam', scene:'room', online:true, battery:87, signal:4, _mins:3,
+      recipients:['ops@inbox.example','alerts@inbox.example'],
+      photos:[P('14:02','manual','today'),P('09:17','oncall','today'),P('02:48','manual','today'),P('23:31','manual','yesterday')]},
+    {serial:'SN-4G-0B07', name:'Backpack', scene:'hall', online:true, battery:62, signal:3, _mins:12,
+      recipients:['ops@inbox.example'],
+      photos:[P('13:50','manual','today'),P('06:22','manual','today'),P('21:05','oncall','yesterday')]},
+    {serial:'SN-4G-0C33', name:'Spare Unit', scene:'desk', online:false, battery:9, signal:1,
+      recipients:[], photos:[P('18:40','manual','earlier')]}
+  ];
+  var selected=0, photoFilter='all', lbCtx={d:-1,p:-1}, renaming=false, confirmingDelete=false;
+
+  function lastSeenText(d){ if(!d.online) return (lang==='zh'?'2 天前':'2 days ago'); if(d._fresh) return t('con_ago'); return lang==='zh'?(d._mins+' 分钟前'):(d._mins+' min ago'); }
+  function bars(n){ var s='<span class="bars">'; for(var i=1;i<=4;i++){ s+='<i class="'+(i<=n?'f':'')+'"></i>'; } return s+'</span>'; }
+  function esc(x){ return String(x).replace(/[&<>"]/g,function(ch){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch];}); }
+  function dayLabel(day){ return day==='today'?t('ad_filter_today'):day==='yesterday'?t('ad_filter_yest'):t('ad_filter_earlier'); }
+  function photoTime(ph){ return dayLabel(ph.day)+' '+ph.t; }
+  function trgLabel(trg){ return t('trg_'+trg); }
+
+  function scene(type){
+    var wall='#d3d9d4', wall2='#bcc4be', floor='#8d7f6b', obj='#5d6b61', frame='#7a8278';
+    var s='<svg viewBox="0 0 160 120" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">';
+    s+='<defs><linearGradient id="w'+type+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="'+wall+'"/><stop offset="1" stop-color="'+wall2+'"/></linearGradient></defs>';
+    s+='<rect width="160" height="92" fill="url(#w'+type+')"/><rect y="88" width="160" height="32" fill="'+floor+'"/>';
+    if(type==='room'){
+      s+='<rect x="92" y="20" width="50" height="44" fill="#e8eef0" stroke="'+frame+'" stroke-width="3"/>';
+      s+='<rect x="115" y="20" width="3" height="44" fill="'+frame+'"/><rect x="92" y="40" width="50" height="3" fill="'+frame+'"/>';
+      s+='<rect x="16" y="62" width="52" height="22" rx="4" fill="'+obj+'"/><rect x="16" y="54" width="52" height="14" rx="4" fill="'+frame+'"/>';
+    } else if(type==='hall'){
+      s+='<rect x="56" y="26" width="48" height="64" fill="'+obj+'"/><rect x="56" y="26" width="48" height="64" fill="none" stroke="'+frame+'" stroke-width="3"/>';
+      s+='<rect x="64" y="36" width="32" height="20" fill="'+frame+'" opacity="0.5"/><circle cx="97" cy="60" r="2.5" fill="'+wall+'"/>';
+    } else {
+      s+='<rect x="20" y="74" width="120" height="6" fill="'+obj+'"/><rect x="28" y="80" width="6" height="10" fill="'+frame+'"/><rect x="126" y="80" width="6" height="10" fill="'+frame+'"/>';
+      s+='<rect x="60" y="48" width="40" height="26" rx="2" fill="'+frame+'"/><rect x="64" y="52" width="32" height="18" fill="#e8eef0"/><rect x="76" y="74" width="8" height="4" fill="'+obj+'"/>';
+      s+='<rect x="34" y="58" width="3" height="16" fill="'+frame+'"/><circle cx="35" cy="56" r="6" fill="'+obj+'"/>';
+    }
+    return s+'</svg>';
+  }
+
+  function renderList(){
+    var html=devices.map(function(d,i){
+      return '<div class="dcard '+(i===selected?'sel':'')+'" data-i="'+i+'"><div class="top"><div><div class="dn">'+esc(d.name)+'</div><div class="sn">'+esc(d.serial)+'</div></div>'
+        +'<span class="status '+(d.online?'online':'offline')+'"><span class="sd"></span>'+(d.online?t('ad_online'):t('ad_offline'))+'</span></div>'
+        +'<div class="meta"><span>'+t('ad_battery')+' <b>'+d.battery+'%</b></span><span>'+t('ad_signal')+' '+bars(d.signal)+'</span><span><b>'+d.photos.length+'</b> '+t('ad_photos')+'</span></div></div>';
+    }).join('');
+    if(devices.length===0) html='<div class="recempty">'+t('ad_nodevices')+'</div>';
+    document.getElementById('dlist').innerHTML=html;
+    document.querySelectorAll('#dlist .dcard').forEach(function(c){ c.addEventListener('click', function(){ selected=+c.dataset.i; photoFilter='all'; renaming=false; confirmingDelete=false; renderList(); renderDetail(); }); });
+  }
+
+  function renderDetail(){
+    var box=document.getElementById('ddetail');
+    if(devices.length===0){ box.innerHTML='<div class="ddetail"><div class="recempty" style="margin:0">'+t('ad_selectadd')+'</div></div>'; return; }
+    if(selected>=devices.length) selected=devices.length-1;
+    var d=devices[selected];
+    var nameBlock = renaming
+      ? '<div class="rename"><input id="rnInput" value="'+esc(d.name)+'"><button class="rb save" id="rnSave">'+t('ad_save')+'</button><button class="rb cancel" id="rnCancel">'+t('ad_cancel')+'</button></div>'
+      : '<div class="dn-row"><span class="dn">'+esc(d.name)+'</span><button class="iconbtn" id="editName" title="'+t('ad_rename')+'">✎</button></div><div class="sn">'+esc(d.serial)+'</div>';
+    var confirmBlock = confirmingDelete
+      ? '<div class="confirmbar"><div class="ct">'+t('ad_del_confirm').replace('{n}','<b>'+esc(d.name)+'</b>')+'</div><div class="cb"><button class="yes" id="delYes">'+t('ad_del_yes')+'</button><button class="no" id="delNo">'+t('ad_del_no')+'</button></div></div>'
+      : '';
+    var fp = d.photos.filter(function(ph){ return photoFilter==='all' || ph.day===photoFilter; });
+    var filterBtns = ['all','today','yesterday','earlier'].map(function(f){
+      var lbl = f==='all'?t('ad_filter_all'):f==='today'?t('ad_filter_today'):f==='yesterday'?t('ad_filter_yest'):t('ad_filter_earlier');
+      return '<button class="'+(photoFilter===f?'on':'')+'" data-f="'+f+'">'+lbl+'</button>';
+    }).join('');
+    var photoBody = d.photos.length===0
+      ? '<div class="phempty">'+t('ad_nophotos')+'</div>'
+      : (fp.length===0 ? '<div class="phempty">'+t('ad_nophotos_f')+'</div>'
+        : '<div class="phgrid">'+fp.map(function(ph){ var pi=d.photos.indexOf(ph);
+            return '<div class="phcard" data-pi="'+pi+'"><div class="phimg">'+scene(d.scene)
+              +'<button class="phdel" data-del="'+pi+'" title="'+t('lb_delete')+'">×</button>'
+              +'<span class="ts">'+esc(photoTime(ph))+'</span><span class="trg">'+esc(trgLabel(ph.trg))+'</span></div></div>';
+          }).join('')+'</div>');
+    var recCount = d.recipients.length;
+    var recHtml = recCount===0
+      ? '<div class="recempty">'+t('ad_norec')+'</div>'
+      : '<div class="reclist">'+d.recipients.map(function(em,ri){ var p=em.split('@');
+          return '<div class="recitem"><div class="em">'+esc(p[0])+'<span class="at">@'+esc(p[1]||'')+'</span></div><button data-ri="'+ri+'" title="'+t('lb_delete')+'">×</button></div>';
+        }).join('')+'</div>';
+    var recInput = recCount>=REC_MAX
+      ? '<div class="recfull">'+t('ad_rec_full')+'</div>'
+      : '<div class="recadd"><input id="recInput" type="email" placeholder="'+t('ad_addr_ph')+'"><button id="recAdd">'+t('ad_add_rec')+'</button></div><div class="recerr" id="recErr"></div>';
+
+    box.innerHTML='<div class="ddetail"><div class="dd-head"><div>'+nameBlock+'</div><div class="dd-actions">'
+      +(renaming?'':'<button class="iconbtn danger" id="delBtn" title="'+t('ad_delete')+'">🗑</button>')
+      +'<span class="status '+(d.online?'online':'offline')+'"><span class="sd"></span>'+(d.online?t('ad_online'):t('ad_offline'))+'</span></div></div>'
+      +confirmBlock
+      +'<div class="ddstats"><div class="s"><div class="k">'+t('ad_battery')+'</div><div class="v">'+d.battery+'%</div></div>'
+      +'<div class="s"><div class="k">'+t('ad_signal')+'</div><div class="v">'+bars(d.signal)+'</div></div>'
+      +'<div class="s"><div class="k">'+t('ad_lastseen')+'</div><div class="v '+(d.online?'cy':'')+'">'+esc(lastSeenText(d))+'</div></div>'
+      +'<div class="s"><div class="k">'+t('ad_photos_k')+'</div><div class="v">'+d.photos.length+'</div></div></div>'
+      +'<div class="album-notice">'+t('ad_album_notice')+'</div>'
+      +'<div class="blockhd"><div class="t">'+t('ad_recent')+'</div><div class="phfilter">'+filterBtns+'</div></div>'
+      +photoBody+'<div class="secdiv"></div>'
+      +'<div class="blockhd"><div class="t">'+t('ad_mailto')+'</div><div class="c">'+t('ad_rec_count').replace('{n}',recCount)+' · '+t('ad_applies')+'</div></div>'
+      +recHtml+recInput+'</div>';
+
+    if(renaming){
+      var rn=document.getElementById('rnInput'); rn.focus();
+      var saveRn=function(){ var v=rn.value.trim(); if(v) d.name=v; renaming=false; renderDetail(); renderList(); };
+      document.getElementById('rnSave').addEventListener('click', saveRn);
+      document.getElementById('rnCancel').addEventListener('click', function(){ renaming=false; renderDetail(); });
+      rn.addEventListener('keydown', function(e){ if(e.key==='Enter') saveRn(); if(e.key==='Escape'){ renaming=false; renderDetail(); } });
+    } else {
+      document.getElementById('editName').addEventListener('click', function(){ confirmingDelete=false; renaming=true; renderDetail(); });
+      document.getElementById('delBtn').addEventListener('click', function(){ confirmingDelete=true; renderDetail(); });
+    }
+    if(confirmingDelete){
+      document.getElementById('delYes').addEventListener('click', function(){ devices.splice(selected,1); confirmingDelete=false; if(selected>0) selected--; if(selected<0) selected=0; photoFilter='all'; renderList(); renderDetail(); });
+      document.getElementById('delNo').addEventListener('click', function(){ confirmingDelete=false; renderDetail(); });
+    }
+    document.querySelectorAll('#ddetail .phfilter button').forEach(function(b){ b.addEventListener('click', function(){ photoFilter=b.dataset.f; renderDetail(); }); });
+    document.querySelectorAll('#ddetail .phdel').forEach(function(b){ b.addEventListener('click', function(e){ e.stopPropagation(); d.photos.splice(+b.dataset.del,1); renderDetail(); renderList(); }); });
+    document.querySelectorAll('#ddetail .phcard').forEach(function(card){ card.addEventListener('click', function(){ openLightbox(selected, +card.dataset.pi); }); });
+    document.querySelectorAll('#ddetail .recitem button').forEach(function(b){ b.addEventListener('click', function(){ d.recipients.splice(+b.dataset.ri,1); renderDetail(); renderList(); }); });
+    if(recCount<REC_MAX){
+      var input=document.getElementById('recInput');
+      function addRec(){ var v=input.value.trim(), err=document.getElementById('recErr'); if(!v) return;
+        if(!emailOk(v)){ err.textContent=t('ad_rec_invalid'); return; }
+        if(d.recipients.indexOf(v)>-1){ err.textContent=t('ad_rec_dupe'); return; }
+        if(d.recipients.length>=REC_MAX){ err.textContent=t('ad_rec_full'); return; }
+        d.recipients.push(v); renderDetail(); renderList(); }
+      document.getElementById('recAdd').addEventListener('click', addRec);
+      input.addEventListener('keydown', function(e){ if(e.key==='Enter') addRec(); });
+    }
+  }
+
+  function openLightbox(di, pi){
+    var d=devices[di], ph=d.photos[pi]; lbCtx={d:di,p:pi};
+    document.getElementById('lbimg').innerHTML=scene(d.scene);
+    document.getElementById('lbinfo').innerHTML='<span>'+esc(d.name)+'</span>'+esc(photoTime(ph))+'  ·  '+esc(trgLabel(ph.trg));
+    document.getElementById('lightbox').classList.add('on');
+  }
+  document.getElementById('lbclose').addEventListener('click', function(){ document.getElementById('lightbox').classList.remove('on'); });
+  document.getElementById('lbdel').addEventListener('click', function(){ if(lbCtx.d>-1){ devices[lbCtx.d].photos.splice(lbCtx.p,1); document.getElementById('lightbox').classList.remove('on'); renderDetail(); renderList(); } });
+  document.getElementById('lightbox').addEventListener('click', function(e){ if(e.target===this) this.classList.remove('on'); });
+
+  function renderGlobal(){
+    var html='<div class="gr h"><div class="gc">'+t('ad_g_device')+'</div><div class="gc">'+t('ad_g_recipient')+'</div><div class="gc">'+t('ad_g_status')+'</div></div>';
+    var any=false;
+    devices.forEach(function(d){ d.recipients.forEach(function(em){ any=true;
+      html+='<div class="gr"><div class="gc">'+esc(d.name)+'</div><div class="gc">'+esc(em)+'</div><div class="gc"><span class="status '+(d.online?'online':'offline')+'"><span class="sd"></span>'+(d.online?t('ad_g_live'):t('ad_g_paused'))+'</span></div></div>'; }); });
+    if(!any) html+='<div class="gr"><div class="gc" style="color:var(--muted2)">'+t('ad_g_none')+'</div></div>';
+    document.getElementById('gtable').innerHTML=html;
+  }
+
+  document.getElementById('showAdd').addEventListener('click', function(){ document.getElementById('addForm').classList.add('on'); this.style.display='none'; });
+  document.getElementById('ndCancel').addEventListener('click', function(){ document.getElementById('addForm').classList.remove('on'); document.getElementById('showAdd').style.display='block'; document.getElementById('ndErr').textContent=''; document.getElementById('ndSerial').value=''; document.getElementById('ndName').value=''; });
+  document.getElementById('ndGo').addEventListener('click', function(){
+    var s=document.getElementById('ndSerial').value.trim(), nm=document.getElementById('ndName').value.trim(), err=document.getElementById('ndErr');
+    if(!s||!nm){ err.textContent=t('ad_err_addfields'); return; }
+    if(devices.some(function(d){return d.serial.toLowerCase()===s.toLowerCase();})){ err.textContent=t('ad_err_serialdupe'); return; }
+    var scenes=['room','hall','desk'];
+    devices.push({serial:s, name:nm, scene:scenes[devices.length%3], online:true, battery:100, signal:4, _fresh:true, recipients:[], photos:[]});
+    selected=devices.length-1; photoFilter='all';
+    document.getElementById('ndSerial').value=''; document.getElementById('ndName').value=''; err.textContent='';
+    document.getElementById('addForm').classList.remove('on'); document.getElementById('showAdd').style.display='block';
+    renderList(); renderDetail();
+  });
+
+  applyLang('en');
+  renderList(); renderDetail();
+})();
+</script>
+</body>
+</html>
